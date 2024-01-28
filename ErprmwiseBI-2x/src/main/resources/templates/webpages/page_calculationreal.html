@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>BI-Tool</title>
+<th:block th:replace="fragments/calculatereal/frag_header :: header"></th:block>
+<link rel="icon" th:href="@{BI_images/unopoint_geolocation_logo_1.png}">
+  <script nonce="undefined" src="https://cdn.zinggrid.com/zinggrid.min.js"></script>
+<link th:href="@{CustomCssJs/marginapproximation.css}" rel="stylesheet" />
+<style>
+		/*Added by Vasim on 16-08-2023*/
+		.spinner {
+			border: 4px solid rgba(0, 0, 0, 0.1);
+			border-top: 4px solid #3498db;
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			animation: spin 2s linear infinite;
+			margin: 0 auto;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+		
+		#tableHead{
+			position: sticky;
+			top: 0;
+			z-index: 3;
+		}
+	</style>
+
+</head>
+<body>
+
+ <!-- FORM STARTS -->
+	<form th:action="@{/submit}" th:object="${dtorealtimeapproximation}" method="post">
+		
+		<!-- WRAPPER STARTS HERE -->
+		<div class="wrapper">
+			
+			<!-- Main container OF Screen Start -->
+  			<div class="main">
+			        
+			    <!-- SIDEBAR START -->
+				<div th:replace="fragments/frag_sidebar :: executive_sidebar"></div>
+				<!-- SIDEBAR END -->
+
+				<!-- Navigation bar Start Here -->
+				<div th:replace="fragments/frag_nav :: executive_navbar"></div>
+				<!-- Navigation bar Ends Here -->
+
+			    <!-- MAIN CONTENT BEGAINS FROM HERE  -->
+				<main class="content">
+					
+					
+					
+					<div class="Header pl-3">
+						<div class="h3">
+							<b>CALCULATE  REAL</b>
+						</div>
+					</div>
+					
+					
+					<!--CARD WITH FILTERS-->
+					<div th:replace="fragments/calculatereal/frag_realtimecard :: realtimecard"></div>
+					<!--CARD WITH FILTERS-->
+					
+					<!-- Model Is Place Here -->
+					  <div th:replace="fragments/calculatereal/frag_approxmodal :: executivehomescreenmodel"></div>
+					<!-- Model Is Place Here -->
+
+					
+					
+					<!--SPINNER BEGINS-->
+					<div id="spinner-container" style="display: none;">
+						<div class="spinner"></div>
+					</div>
+					<!--SPINNER ENDS-->
+
+					<div id="data-container" style="display: none;">
+						<div id="graphsAndTable">
+								<div class="graph-container" id="graphs"  style="margin-bottom:70px;">
+									<div class="graph" id="graph1">
+										<!-- Graph Implementation 6AUGUST 2023 STARTS -->
+										<!--<div th:replace="fragments/calculatereal/frag_mixgraph :: raltimemixgraph"
+										style="width:50px;"></div>-->
+										<!-- Graph Implementation 2AUGUST 2023 ENDS-->
+										
+									</div>
+									
+								</div>
+
+                                  
+                                  <!-- Real Time Margin Table Start-->
+								<div id="approxmargintable" style="height: 500px;overflow-y: scroll;">
+									<div th:replace="fragments/calculatereal/frag_realtable :: realtable"></div>
+								</div>
+						  		<!-- Real Time Margin Table ENDS-->
+                                  
+						</div>
+					</div>
+						
+							
+					<div id="messageDiv"></div>
+					
+				</main>
+				<!-- MAIN CONTENT ENDS FROM HERE  -->	
+			        	  
+  			</div>
+  			<!-- Main container OF Screen ENDS -->
+  	    
+  	     </div>
+  	     <!-- WRAPPER ENDS HERE -->		
+		
+		
+		
+    </form>
+<!-- FORM ENDS -->
+<script th:inline="javascript">
+
+
+	  function calculateDirectApproximateMargin(selectedPage) {
+				var m_strPageNo = "";
+				if (selectedPage === undefined || selectedPage === null) {
+                    m_strPageNo=1;
+				} else {
+					m_strPageNo = selectedPage;
+				}
+				
+				const tableHead = document.getElementById('tableHead');   //DELETING TABLE HEAD AGAIN
+				tableHead.innerHTML = '';                                 //DELETING TABLE HEAD AGAIN
+
+				const tableBody = document.getElementById('tableBody');    //DELETING TABLE BODY AGAIN
+				tableBody.innerHTML = '';                                  //DELETING TABLE BODY AGAIN
+
+				const graphsAndTable = document.getElementById('graphsAndTable');
+				graphsAndTable.style.display = 'none';
+				
+				
+				var m_strYear = document.getElementById("date-dropdown").value;
+				var m_strPageSize = document.getElementById("pagesize").value;
+				var m_strCurrency = document.getElementById("currencies").value;
+				var m_strPFY = document.getElementById("pfy-dropdown").value;
+				var m_strPeriodictype = document.getElementById("periodictype").value;
+				
+				/**
+				console.log("m_strYear:", m_strYear);
+				console.log("m_strPageSize:", m_strPageSize);
+				console.log("m_strCurrency:", m_strCurrency);
+				console.log("m_strPeriodictype:", m_strPeriodictype);
+                **/
+               
+				fetchDataForTable(
+							m_strCurrency,
+							m_strYear,
+							m_strPFY,
+							m_strPageSize, m_strPageNo,m_strPeriodictype);
+			
+				
+		} 
+
+
+
+function fetchDataForTable(m_strCurrency,m_strYear,m_strPFY,m_strPageSize,m_strPageNo,m_strPeriodictype) {
+				//showSpinner();
+			
+				console.log("m_strYear:", m_strYear);
+				console.log("m_strPageSize:", m_strPageSize);
+				console.log("m_strCurrency:", m_strCurrency);
+				console.log("m_strPeriodictype:", m_strPeriodictype);
+
+				showSpinner();
+				//let m_strPageNo=1;
+				 var url_mainToRealCalculation = /*[[@{/getrealtimemarginapi}]]*/ +"";
+				 var m_strQarter="All";
+				
+		         const url = url_mainToRealCalculation + '/yearwise?m_strPeriodictype=' + m_strPeriodictype + '&m_strCurrency=' + m_strCurrency + 
+		         '&m_strYear=' + m_strYear +'&m_strPFY=' + m_strPFY + '&m_strPageSize=' + m_strPageSize + '&m_strPageNo=' + m_strPageNo+'&m_strQarter=' + m_strQarter;			
+					
+               				fetch(url)
+					.then(response => response.json())
+					.then(data => {
+
+                        //alert(JSON.stringify(data));
+						generateTable(data);
+						//generateNegativeCharts();
+						hideSpinner();
+						const graphsAndTable = document.getElementById('graphsAndTable');
+						if (data.jsonResponse.length === 0) {
+							graphsAndTable.style.display = 'none';
+						} else {
+							graphsAndTable.style.display = 'block';
+						}
+
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						hideSpinner();
+					});
+
+	
+	}
+	
+	
+	function generateTable(data) {
+
+				
+
+				const tableData = data.jsonResponse; // Access the tableData directly
+				const tableHeader = data.dtoTableHeaderList;
+				const pageinationBoolean = data.pageinationBoolean;
+
+				/**PAGEINATION CONCEPT START**/
+				if (pageinationBoolean === 'True') {
+					const totalPages = data.n_intTotalPages;
+					const pageNo = data.pageNo;
+					var selectedPage = pageNo;
+					const pageSize = data.pageSize;
+
+					var paginationHtml = '<nav aria-label="Page navigation"><ul class="pagination">';
+					for (var i = 1; i <= totalPages; i++) {
+						if (i !== pageNo) {
+							paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '"> ' + i + '</a></li>';
+						} else {
+							paginationHtml += '<li class="page-item active"><span class="page-link">' + i + '<span class="sr-only">(current)</span></span></li>';
+						}
+					}
+					paginationHtml += '</ul></nav>';
+
+					$('#paginationContainer').html(paginationHtml);
+
+					$('.pagination a').on('click', function () {
+						var selectedPage = $(this).data('page');
+
+						calculateDirectApproximateMargin(selectedPage);
+					});
+
+				}
+				/**PAGEINATION CONCEPT ENDS**/
+
+                
+				if (tableData.length === 0) {
+					document.getElementById('downloadButton').style.display = 'none';
+
+					document.getElementById('graph1').style.display = 'none';
+					//UNCOMMENT document.getElementById('graph2').style.display = 'none';
+
+
+					document.getElementById('messageDiv').style.display = 'block';
+					const messageDiv = document.getElementById('messageDiv');
+					messageDiv.textContent = "";   // Clear existing content
+					const heading = document.createElement('h3');
+					heading.textContent = "THERE IS NO DATA";
+					heading.style.textAlign = 'center';
+					heading.style.fontWeight = 'bold';
+					heading.style.color = '#333'; // Change the font color to your desired color
+					heading.style.fontFamily = 'Arial, sans-serif';
+					messageDiv.appendChild(heading);
+				} else {
+					
+					document.getElementById('downloadButton').style.display = 'block';
+					document.getElementById('messageDiv').style.display = 'none';
+
+					document.getElementById('graph1').style.display = 'block';
+					//UNCOMMENT document.getElementById('graph2').style.display = 'block';
+
+				}
+
+
+                const tableHeader2 = document.getElementById('tableHead');
+				tableHeader2.innerHTML = '';
+				tableHeader.forEach((item) => {
+					const row = document.createElement('th');
+					const tableHeader = item.tableHeader;
+                    
+					row.innerHTML = `
+					            <th>${tableHeader}</th>
+									`;
+					tableHeader2.appendChild(row)
+				});
+
+
+				const tableBody = document.getElementById('tableBody');
+				tableBody.innerHTML = '';
+				let x_SrNo = 1;
+                 tableData.forEach((item) => {
+
+					const row = document.createElement('tr');
+					const srNo = item.n_intSrNo;
+					const principleCustomerName = item.m_strPcName;
+					const customerName = item.m_strCustomerName;
+					const totalTickets = item.customerContractValue;
+					const contractValue = item.m_strTotalTicketsForCustomer;
+					const estimatedCostOfService = item.totalClaimApprovedAmountCustomer;
+					const ytdMargin = item.spareConsumedCostForCustomer;
+					const avgRemainsMonth = item.avgTicketCostOfEng;
+					const CostOfOperation = item.CostOfOperation;
+					const m_strYTDCost = item.m_strYTDCost;
+					const avgPerMonth = item.avgPerMonth;
+					const EoyMargin = item.EoyMargin;
+					const profitExpected = item.profitExpected;
+					const m_strPercentageOverall = item.m_strPercentageOverall;
+					const dataIndex = item.m_strIndexShown;
+
+					// Create the img element once before the if statement
+					const arrowImg = document.createElement('img');
+					arrowImg.style.width = '25px'; // Set the desired width of the image
+					arrowImg.style.height = '25px'; // Set the desired height of the image
+					arrowImg.style.background = '#ffffff'; // Set the desired color (not applicable for images)
+
+					if (dataIndex === "IN_PROFIT") {
+						arrowImg.src = /*[[ @{/BI_images/png-transparent-green-arrow-illustration-arrow-up.png} ]]*/ '';
+					} else if (dataIndex === "IN_LOSS") {
+						arrowImg.src = /*[[ @{/BI_images/png-down.png} ]]*/ '';
+					} else if (dataIndex === "IN_BOTH") {
+						arrowImg.src = /*[[ @{/BI_images/orangealert.png} ]]*/ '';
+					} else {
+
+					}
+					// Append the img element to the td
+					const tdArrow = document.createElement('td');
+					tdArrow.appendChild(arrowImg);
+
+					row.innerHTML = `
+									    <td>${x_SrNo}</td>
+									      <td>${principleCustomerName}</td>
+									      <td>${customerName}</td>
+									      <td>${totalTickets}</td>
+									      <td>${contractValue}</td>
+									     <!-- <td>${estimatedCostOfService}</td>-->
+									      <td>${ytdMargin}</td>
+									      <td>${avgRemainsMonth}</td>
+									      <td>${CostOfOperation}</td>
+									      <td>${m_strYTDCost}</td>
+									      <td>${avgPerMonth}</td>
+									      <td>${EoyMargin}</td>
+									      <td>${profitExpected}</td>
+									      <td>${m_strPercentageOverall}</td>
+									    `;
+
+					row.appendChild(tdArrow);
+					tableBody.appendChild(row);
+					x_SrNo++;
+				});
+
+
+
+			}
+
+	
+</script>
+<!--Added by Vasim on 16-08-2023-->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			setTimeout(function () {
+				$("#spinner-container").hide();
+				$("#data-container").show();
+			}, 4000);
+		});
+
+	</script>
+
+	<script>
+		function showSpinner() {
+			document.getElementById('spinner-container').style.display = 'block';
+		}
+
+		function hideSpinner() {
+			document.getElementById('spinner-container').style.display = 'none';
+		}
+	</script>
+
+
+	
+</body>
+</html>

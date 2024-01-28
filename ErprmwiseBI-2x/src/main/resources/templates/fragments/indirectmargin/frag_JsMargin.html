@@ -1,0 +1,449 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+</head>
+
+<body>
+	<div th:fragment="marginjs">
+
+<script th:inline="javascript">
+	  
+		function calculateDirectMargin(selectedPage){
+			   
+			  document.getElementById("loader").style.display = "block";
+			  document.getElementById("contentTable").style.display = "none";
+			
+				var m_strPageNo="";
+				if (selectedPage === undefined || selectedPage === null) {}
+				else{
+					m_strPageNo=selectedPage;
+				}
+				 var m_strAvgcostperticketid = document.getElementById("avgcostperticketid").value;
+				 var m_strSparecost = document.getElementById("sparecost").value;
+				 var m_strVisitcharge = document.getElementById("visitcharge").value;
+				 
+				 var sumOfAllCost = parseInt(m_strVisitcharge) + parseInt(m_strSparecost) + parseFloat(m_strAvgcostperticketid);
+				 console.log("Overall Cost= "+sumOfAllCost)
+				 
+				 var m_strPeriodictype = document.getElementById("periodictype").value;
+				 var m_strCurrency = document.getElementById("currencies").value;
+			     var m_strFromDate= document.getElementById("fromdate").value;
+				 var m_strToDate=document.getElementById("todate").value;
+				 var m_strYear=document.getElementById("date-dropdown").value;
+				 var m_strQarter=document.getElementById("date-q1").value;
+				 var m_strPFY=document.getElementById("pfy-dropdown").value;
+				 var m_strPageSize=document.getElementById("pagesize").value;
+				 
+				 if (m_strAvgcostperticketid === "" || isNaN(m_strAvgcostperticketid) || m_strAvgcostperticketid === "0") {  
+				     alert("Please Enter Numeric value Only For Average Cost");
+				 } else {
+				
+					 if (m_strCurrency === "Select" ) {
+						 alert("Please Select Currency Type");
+						 
+					 }else{
+					     
+						 if (m_strPeriodictype === "Select" ) {
+							 alert("Please Select Periodic Type");
+						 }else{
+							
+							     var m_selectedPeriodic="";
+							     var m_selectedPeriodicValue="";
+								 if(m_strPeriodictype==="YTD"){
+									 m_selectedPeriodic="Please Select Year";
+									 m_selectedPeriodicValue=document.getElementById("date-dropdown").value;
+								 }else if(m_strPeriodictype==="FY"){
+									 m_selectedPeriodic="Please Select Financial Year";
+									 m_selectedPeriodicValue=document.getElementById("pfy-dropdown").value;
+								 }else{
+									 m_selectedPeriodic="Please Select Custom Date Range";
+									 m_selectedPeriodicValue= document.getElementById("fromdate").value;
+								 }
+							 
+								 
+								 if(m_selectedPeriodicValue==="Select" || m_selectedPeriodicValue==="select"){ alert(m_selectedPeriodic);  }
+								 else{
+									
+									 
+			
+					// Call the fetchData function to initially generate the table
+											// Call the fetchData function with these values as arguments
+										fetchData(
+										  sumOfAllCost,
+										  m_strPeriodictype,
+										  m_strCurrency,
+										  m_strFromDate,
+										  m_strToDate,
+										  m_strYear,
+										  m_strQarter,
+										  m_strPFY,
+										  m_strPageSize
+										);
+									 
+									 /**GENERATE TABLE ENDS**/
+									 
+								 }  // ENds Selected Year PFY CUSTOM
+							 
+						 }    //PERIODIC TYPE ENDS HERE
+						 
+					 } 
+				 }
+				 
+				 
+			}
+			
+			function generateTableHeader(tableHeaderData){
+				
+				const tableHead =  document.getElementById('directmargintablehead');
+				let row = document.createElement('tr');
+				
+				tableHeaderData.forEach((item) => {
+					             let tableHeader = item.tableHeader;
+				                 let column = document.createElement('th');							   
+											   
+								    column.textContent = tableHeader;
+                                    row.appendChild(column);
+                                    
+							  });
+							  
+										  tableHead.appendChild(row);
+			}
+			
+			function fetchData(m_strAvgcostperticketid, m_strPeriodictype,m_strCurrency,m_strFromDate,m_strToDate,m_strYear,m_strQarter,m_strPFY,m_strPageSize){
+
+					
+					var m_strPageNo="";
+					console.log("m_strAvgcostperticketid:", m_strAvgcostperticketid);
+					console.log("m_strPeriodictype:", m_strPeriodictype);
+					console.log("m_strCurrency:", m_strCurrency);
+					console.log("m_strFromDate:", m_strFromDate);
+					console.log("m_strToDate:", m_strToDate);
+					console.log("m_strYear:", m_strYear);
+					console.log("m_strQarter:", m_strQarter);
+					console.log("m_strPFY:", m_strPFY);
+					console.log("m_strPageSize:", m_strPageSize);
+					
+					
+				   var url_getdataforexecutivetree= /*[[@{/apiindirectmargin}]]*/ +"";
+					
+				   const url = url_getdataforexecutivetree+'/indirect?m_strAvgcostperticketid=' + m_strAvgcostperticketid + '&m_strPeriodictype=' + m_strPeriodictype + '&m_strCurrency=' + m_strCurrency + '&m_strFromDate=' + m_strFromDate +
+					    '&m_strToDate=' + m_strToDate + '&m_strYear=' + m_strYear + '&m_strQarter=' + m_strQarter+'&m_strPFY='+m_strPFY+'&m_strPageSize='+m_strPageSize+'&m_strPageNo='+m_strPageNo;
+			
+			
+			fetch(url, {
+			  method: 'GET',  // Use the appropriate HTTP method (e.g., 'POST' or 'GET')
+			  headers: {
+			    'Content-Type': 'application/json', // Set the Content-Type header
+			  }
+			})
+			  .then(response => {
+			    if (response.status === 200) {
+			      const contentType = response.headers.get('content-type');
+			      
+			      if (contentType && contentType.includes('application/json')) {
+
+			        return response.json()
+			          .then(data => {
+						  console.log(" JSON DATA >= "+JSON.stringify(data));
+			              
+			              generateTable(data);
+			              document.getElementById("loader").style.display = "none"; 
+        				  document.getElementById("contentTable").style.display = "block";
+        				  const tableData = data.tableData; // Access the tableData directly
+        				  if(data.tableData.length!==0){
+							   //console.log("  NOT GOING TO MAKE NONE -frag_JsMargin Line No 130  ");
+							   document.getElementById("id_positive_Graph").style.display = "block";
+							   document.getElementById("id_negative_Graph").style.display = "block";
+							   
+							setTimeout(generateNegativeCharts, 2000);  
+						  }else{
+							   //console.log("   GOING TO MAKE NONE -frag_JsMargin Line No 138  ");
+							   document.getElementById("id_positive_Graph").style.display = "none";
+							   document.getElementById("id_negative_Graph").style.display = "none";
+						  }
+        				  
+
+			          });
+			      } else {
+			        return response.text()
+			          .then(textData => {
+			              console.log(textData);
+			              document.getElementById("loader").style.display = "none";
+			          });
+			      }
+			    } else {
+			      console.error('Error:', response.status, response.statusText);
+			      document.getElementById("loader").style.display = "none";
+			    }
+			  })
+			  .catch(error => {
+			    console.error('Fetch Error:', error);
+			  });
+					   
+			}
+			
+		/**GENERATE TABLE**/
+		function generateTable(data) {
+								 
+								    const tableHeadData = data.tableRowHead; // Access the tableData directly
+								    
+								    
+								    const tableHead =  document.getElementById('directmargintablehead');
+								    tableHead.innerHTML="";
+								    
+								    const tableBody = document.getElementById('tableBody');
+									tableBody.innerHTML = '';    
+									const tableData = data.tableData; // Access the tableData directly
+									const pageinationBoolean=data.pageinationBoolean;
+									
+									
+									
+									
+									
+									
+										 if(pageinationBoolean==='True'){
+											 console.log("Generating Pageination")
+											  const totalPages=data.n_intTotalPages;
+											  const pageNo=data.pageNo;
+											  var selectedPage=pageNo;
+											  const pageSize=data.pageSize;
+		
+     										    console.log("Total Pages: " + data.n_intTotalPages);
+	    									    console.log("Page Number: " + data.pageNo);
+											    console.log("Selected Page: " + selectedPage);
+    										    console.log("Page Size: " + data.pageSize);	
+											  
+											  console.log()
+								             
+												var paginationHtml = '<nav aria-label="Page navigation"><ul class="pagination">';
+												for (var i = 1; i <= totalPages; i++) {
+													if (i !== pageNo) {
+														paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + i + '"> ' + i + '</a></li>';
+													} else {
+														paginationHtml += '<li class="page-item active"><span class="page-link">' + i + '<span class="sr-only">(current)</span></span></li>';
+													}
+												}
+												paginationHtml += '</ul></nav>';
+			
+												$('#paginationContainer').html(paginationHtml);
+			
+												$('.pagination a').on('click', function () {
+													var selectedPage = $(this).data('page');
+													calculateDirectMargin(selectedPage);
+												});
+								               
+										    }
+										  
+										  if(tableData.length===0){
+			   								  document.getElementById('downloadButton').style.display = 'none';
+			   								  document.getElementById("contentTable").style.display = "none";
+			   								  document.getElementById('messageDiv').style.display = 'block';
+									        	const messageDiv = document.getElementById('messageDiv');
+									        	messageDiv.textContent = "";                                     //   Clear existing content
+									        	const heading = document.createElement('h3');
+									        	heading.textContent = "THERE IS NO DATA";
+									        	heading.style.textAlign = 'center';
+									        	heading.style.fontWeight = 'bold';
+									        	heading.style.color = '#333';                                     // Change the font color to your desired color
+									        	heading.style.fontFamily = 'Arial, sans-serif';
+									           	messageDiv.appendChild(heading);
+										  }else{
+											  document.getElementById('downloadButton').style.display = 'block';
+											  document.getElementById('messageDiv').style.display = 'none';
+											  generateTableHeader(tableHeadData);	  
+										   } 
+										  
+										  let x_SrNo=1;let m_strCurrencyType=data.m_strCurrencyType;
+										  tableData.forEach((item) => {
+											   
+											   let row = document.createElement('tr');
+											   let srNo = item.m_intSrNoIndex;
+											   let principleCustomerName = item.principleCustomerName;
+											   let customerName = item.customerName;
+											   let totalTickets = item.totalTickets;
+											   let contractValue = item.contractValue;
+											   let estimatedCostOfService = item.estimatedCostOfService;
+											   let ytdMargin = item.ytdMargin;
+											   let avgRemainsMonth = item.avgRemainsMonth;
+											   let eoyMargin = item.eoyMargin;
+											   let profitExpected = item.profitExpected;
+											   let percentage = item.percentage;
+											   let dataIndex = item.index;
+											
+											   // Create the img element once before the if statement
+											   const arrowImg = document.createElement('img');
+											   arrowImg.style.width = '25px'; // Set the desired width of the image
+											   arrowImg.style.height = '25px'; // Set the desired height of the image
+											   arrowImg.style.background = '#ffffff'; // Set the desired color (not applicable for images)
+			
+											   if (dataIndex === "IN_PROFIT") {
+											      arrowImg.src = /*[[ @{/BI_images/png-transparent-green-arrow-illustration-arrow-up.png} ]]*/ ''; 
+											   }else if(dataIndex === "IN_LOSS"){
+												  arrowImg.src = /*[[ @{/BI_images/png-down.png} ]]*/ '';
+											   }else if(dataIndex === "IN_BOTH"){
+												  arrowImg.src = /*[[ @{/BI_images/orangealert.png} ]]*/ '';
+											   }
+											   // Append the img element to the td
+											   const tdArrow = document.createElement('td');
+											   tdArrow.appendChild(arrowImg);
+											   
+											   if (m_strCurrencyType === "USD") {
+										             contractValue="$"+contractValue;
+										             estimatedCostOfService="$"+estimatedCostOfService;
+										             ytdMargin="$"+ytdMargin;
+										             avgRemainsMonth="$"+avgRemainsMonth;
+										             eoyMargin="$"+eoyMargin;
+										             
+									           }else  if (m_strCurrencyType === "INR") {
+										              contractValue="₹"+contractValue;
+										              estimatedCostOfService="₹"+estimatedCostOfService;
+											          ytdMargin="₹"+ytdMargin;
+											          avgRemainsMonth="₹"+avgRemainsMonth;
+											          eoyMargin="₹"+eoyMargin;
+									           }
+											   
+											   row.innerHTML = `
+												    <td>${x_SrNo}</td>
+												      <td>${principleCustomerName}</td>
+												      <td>${customerName}</td>
+												      <td>${totalTickets}</td>
+												      <td>${contractValue}</td>
+											     <!-- <td>${estimatedCostOfService}</td>-->
+												      <td>${ytdMargin}</td>
+												      <td>${avgRemainsMonth}</td>
+												      <td>${eoyMargin}</td>
+												      <td>${profitExpected}</td>
+												      <td>${percentage}</td>` ;
+												row.appendChild(tdArrow);
+											    tableBody.appendChild(row);
+											    x_SrNo++;
+										  });
+										  
+			}
+			
+			
+			
+			function generateNegativeCharts(){
+				
+				   var url_getNegativeCustomerData= /*[[@{/apiindirectmargin/negativecolumndata}]]*/ +"";
+				  /*GENERATE GRAPH AFTER TABLE GENERATION ADDED ON 2 AUG 2023 START*/
+				     
+				     fetch(url_getNegativeCustomerData, {
+					    method: 'GET', // Use the appropriate HTTP method (e.g., GET, POST) as needed
+					    headers: {
+					        'Accept': 'application/json', // Specify the expected content type for the response
+					        'Content-Type': 'application/json' // Specify the content type for the request
+					    }
+					})
+					.then(response => {
+					    if (!response.ok) {
+					        throw new Error(`HTTP error! Status: ${response.status}`);
+					    }
+					    return response.json();
+					})
+					.then(data => initializeChart(data))
+					.catch(error => console.error('Error loading chart:', error));
+
+				     
+				     /*GENERATE GRAPH AFTER TABLE GENERATION ENDS*/ 
+				     
+				     
+				    var url_getPositiveCustomerData= /*[[@{/apiindirectmargin/getDtochartdataForProfit}]]*/ +"";
+				  /*GENERATE GRAPH AFTER TABLE GENERATION ADDED ON 2 AUG 2023 START*/
+				     
+				     /*fetchDataPositiveChart(url_getPositiveCustomerData)
+				     .then(data => initializeChartPositive(data))
+				     .catch(error => console.error('Error loading chart:', error));  */
+				     
+				      fetch(url_getPositiveCustomerData, {
+					    method: 'GET', // Use the appropriate HTTP method (e.g., GET, POST) as needed
+					    headers: {
+					        'Accept': 'application/json', // Specify the expected content type for the response
+					        'Content-Type': 'application/json' // Specify the content type for the request
+					    }
+					})
+					.then(response => {
+					    if (!response.ok) {
+					        throw new Error(`HTTP error! Status: ${response.status}`);
+					    }
+					    return response.json();
+					})
+					.then(data => initializeChartPositive(data))
+				     
+				     
+				     /*GENERATE GRAPH AFTER TABLE GENERATION ENDS*/ ;
+				     
+			}
+			
+			
+			        /**Handling Selected Periodic Type**/
+					function handleSelect() {
+					    var selectedOption = document.getElementById("periodictype").value;
+					
+					    if (selectedOption === "FY") {
+					    
+					    	pfydropdownconatiner.style.display = "block";
+					    	yeardropdownconatiner.style.display = "none"; // Show the date dropdown container
+					        calenderDropdownContainer.style.display = "none";
+					        qartercontainer.style.display="block";
+					    
+					    } else if (selectedOption === "YTD") {
+					    	
+					    	 yeardropdownconatiner.style.display = "block";
+					    	 calenderDropdownContainer.style.display = "none";
+					    	 pfydropdownconatiner.style.display = "none";
+					    	 qartercontainer.style.display="block"; 
+			                 
+					    } else if(selectedOption === "custom"){
+					    	
+					    	yeardropdownconatiner.style.display = "none";		    	 
+					    	 calenderDropdownContainer.style.display = "block";
+					    	 pfydropdownconatiner.style.display = "none";
+					    	 qartercontainer.style.display="none";
+					    }
+					    else if(selectedOption === "Select"){
+					    	
+					    	yeardropdownconatiner.style.display = "none";		    	 
+					    	 calenderDropdownContainer.style.display = "none";
+					    	 pfydropdownconatiner.style.display = "none";
+					    	 qartercontainer.style.display="none";
+					    }
+					    
+						  let dateDropdown = document.getElementById('date-dropdown'); 
+					       
+						  let currentYear = new Date().getFullYear();    
+						  let earliestYear = 1970;     
+						  while (currentYear >= earliestYear) {      
+						    let dateOption = document.createElement('option');          
+						    dateOption.text = currentYear;      
+						    dateOption.value = currentYear;        
+						    dateDropdown.add(dateOption);      
+						    currentYear -= 1;    
+						  }
+					}
+					/**Handling Selected Periodic Type**/
+					
+					
+					
+					/**DOWNLOAD FUNCTIONALITY STARTS HERE**/
+					function downloadApproximateMargin() {
+							 // Replace '/api/download' with the appropriate URL of your download endpoint
+							 var contextPath = /*[[@{/apiindirectmargin/downloadindirectmargin}]]*/ '';
+							 //var contextPath = /*[[@{/}]]*/ '';
+							 var downloadUrl = /*[[${#strings.concat(contextPath, '/apiindirectmargin/downloadindirectmargin')}]]*/ '';
+							 // Trigger the file download by setting the window location
+							 window.location.href = contextPath;
+			         }
+                        
+                        
+                       
+
+                      
+ 		
+</script>
+
+	</div>
+
+
+</body>
+    
+</html>

@@ -1,0 +1,44 @@
+@charset "ISO-8859-1";
+
+.h4text{
+	font-family:Arial, sans-serif;
+	font-size: 15px; 
+	font-weight: bold; 
+	color: black; 
+	text-transform: uppercase;
+	margin-top: -10px;
+}
+
+
+
+.dropdown1 {
+  /* width: 100%;
+  padding: 8px 12px; */
+  font-size: 16px;
+  color: #495057;
+  background-color: #fff;
+  width:100px;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.load-chart-btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.5;
+  color: #fff;
+  background-color: #007bff;
+  border: 1px solid #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.load-chart-btn:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}

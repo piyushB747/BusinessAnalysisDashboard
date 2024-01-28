@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<body>
+  <div  th:fragment="executive_navbar">
+     <nav class="navbar navbar-expand navbar-light navbar-bg p-1">
+
+					<div class="navbar-collapse collapse row">
+						<div class="d-flex"
+							style="justify-content: space-between; align-items: center;">
+							<div>
+								<img th:src="@{/BI_images/unopoint_geolocation_logo_1.png}">
+							</div>
+							
+							<!--<i class="bi bi-search"></i>  -->
+							<div class="d-flex">
+								<!--<ion-icon class="p-2" name="notifications-outline"
+									style="font-size: 25px;"></ion-icon>-->
+								<ion-icon type="button" class="p-2" name="filter-circle-outline"
+									style="font-size: 25px;" data-toggle="modal"
+									data-target="#exampleModalCenter"></ion-icon>
+
+								<button type="button" class="btn dropdown-toggle p-0"
+									data-bs-toggle="dropdown" aria-expanded="false"
+									style="border: none">
+									<ion-icon class="p-2" name="person-outline"
+										style="font-size: 25px;"></ion-icon>
+								</button>
+								<ul id="LO-card" class="dropdown-menu">
+									
+									 <li class="lod" th:text="${username}"></li>
+									<li class="lod">Change Password</li>
+									<li class="lod"><a th:href="@{/logout}">Logout</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</nav>
+				
+<script th:inline="javascript">
+ </script>
+
+
+        </div>        
+   </body>
+</html>

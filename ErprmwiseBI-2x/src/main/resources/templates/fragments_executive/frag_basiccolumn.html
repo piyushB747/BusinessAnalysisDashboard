@@ -1,0 +1,355 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<style>
+#container3D {
+	height: 400px;
+}
+
+.highcharts-figure, .highcharts-data-table table {
+	min-width: 310px;
+	max-width: 800px;
+	margin: 1em auto;
+}
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 310px;
+    max-width: 800px;
+    margin: 1em auto;
+}
+
+#container {
+    height: 400px;
+}
+
+.highcharts-data-table table {
+    font-family: Verdana, sans-serif;
+    border-collapse: collapse;
+    border: 1px solid #ebebeb;
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+    background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+    background: #f1f7ff;
+}
+		</style>
+</head>
+<body>
+
+<div th:fragment="basic-column">
+
+		<figure class="highcharts-figure">
+			<div id="container-basic-column" style="display: block;"></div>
+		</figure>
+
+
+
+		<script th:inline="javascript">
+
+	
+	/**
+	      Basic Bar which is used   
+	      container-basic-column
+     	 API JAVA FILE:= APIControlExecutiveHomeCharts
+	**/
+		var y_Year = "2023";
+
+		$(document).ready(function () {
+
+
+			const currentYear = new Date().getFullYear();
+			let selectedYear = currentYear;
+
+			const paramBody = {
+				m_strRegion: null,
+				m_strState: null,
+				m_strPoplocation: null,
+				m_strCity: null,
+				m_strBuId: null,
+				m_strPcId: null,
+				m_strCustId: null,
+				m_strYear: currentYear
+			};
+
+
+			// Add an event listener to the dropdown element
+			const regionDropdown = document.getElementById("dropdownRegionId");
+			regionDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strRegion = event.target.value;
+
+			});
+
+			const stateDropdown = document.getElementById("myDropdownState");
+			stateDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strState = event.target.value;
+
+			});
+
+			const popDropdown = document.getElementById("myDropdownPop");
+			popDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strPoplocation = event.target.value;
+
+			});
+
+			const cityDropdown = document.getElementById("myDropdownCity");
+			cityDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strCity = event.target.value;
+
+			});
+
+			const buDropdown = document.getElementById("myDropdownBum");
+			buDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strBuId = event.target.value;
+
+			});
+
+			const pCustDropdown = document.getElementById("myDropdownPc");
+			pCustDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strPcId = event.target.value;
+
+			});
+
+			const custDropdown = document.getElementById("myDropdownCust");
+			custDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strCustId = event.target.value;
+
+			});
+
+			const yearDropdown = document.getElementById("myDropdownForYear");
+			yearDropdown.addEventListener("change", (event) => {
+				// Update the value of m_strRegion in the paramBody object
+				paramBody.m_strYear = event.target.value;
+				selectedYear = event.target.value;
+
+			});
+
+			// Add click event listener to button
+			const chartButton = document.getElementById("myButtonForChartData");
+			chartButton.addEventListener("click", function () {
+				loadChart();
+			});
+
+			
+			
+			//$('#candle-map').on('click', function() { loadChart(); });
+            loadChart();
+              
+			// function to load the chart with the given year and pc values and BU
+			function loadChart() {
+
+				var year = selectedYear;
+                var mainurlforBasicBarColumnChart=/*[[@{/getdataforbasicChartexecutivehome}]]*/ +"";
+				$.ajax({
+					url: mainurlforBasicBarColumnChart + '?year=' + year,
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify(paramBody),
+					success: function (data) {
+						const chartData = [
+							{
+								name: 'Open',
+								data: data.map(function (point) {
+									return {
+										y: point.open,
+										events: {
+											click: function () {
+												var contextPath =/*[[@{/screenviewrequest}]]*/+"";
+												window.location.href = contextPath + '?openaction=' + point.open + '&mainaction=singlechart&subaction=specificMonth&statusaction=open&monthaction=' + monthNames[point.month - 1] + '&yearaction=' + point.year + '&viewparamaction=' + point.viewRequestParam;
+												//window.location.href = '/graphs/viewrequest?openaction=' + item.open + '&mainaction=singlechart&subaction=specificMonth&statusaction=open&monthaction=' + monthNames2[item.month - 1] + '&yearaction=' + item.year + '&viewparamaction=' + item.viewRequestParam;
+											}
+										}
+									};
+								})
+							},
+							{
+								name: 'Paused',
+								data: data.map(function (point) {
+									return {
+										y: point.paused,
+										events: {
+											click: function () {
+												window.location.href = '/screenviewrequest?pausedaction=' + point.paused + '&mainaction=singlechart&subaction=specificMonth&statusaction=paused&monthaction=' + monthNames[point.month - 1] + '&yearaction=' + point.year + '&viewparamaction=' + point.viewRequestParam;
+											}
+										}
+									};
+								})
+							},
+							{
+								name: 'TechClosed',
+								data: data.map(function (point) {
+									return {
+										y: point.techclosed,
+										events: {
+											click: function () {
+												window.location.href = '/screenviewrequest?techclosedaction=' + point.techclosed + '&mainaction=singlechart&subaction=specificMonth&statusaction=technician_closed&monthaction=' + monthNames[point.month - 1] + '&yearaction=' + point.year + '&viewparamaction=' + point.viewRequestParam;
+											}
+										}
+									};
+								})
+							},
+							{
+								name: 'SlaViolated',
+								data: data.map(function (point) {
+									return {
+										y: point.sla,
+										events: {
+											click: function () {
+												window.location.href = '/screenviewrequest?slaaction=' + point.sla + '&mainaction=singlechart&subaction=specificMonth&statusaction=slaviolated&monthaction=' + monthNames[point.month - 1] + '&yearaction=' + point.year + '&viewparamaction=' + point.viewRequestParam;
+											}
+										}
+									};
+								})
+							},
+							{
+								name: 'Total Calls',
+								data: data.map(function (point) {
+									return {
+										y: point.allCalledLogs,
+										events: {
+											click: function () {
+												window.location.href = '/screenviewrequest?totalcallaction=' + point.sla + '&mainaction=singlechart&subaction=specificMonth&statusaction=slaviolated&monthaction=' + monthNames[point.month - 1] + '&yearaction=' + point.year + '&viewparamaction=' + point.viewRequestParam;
+											}
+										}
+									};
+								})
+							},
+							{
+								name: 'Cancelled',
+								data: data.map(function (point) {
+									return {
+										y: point.cancelled,
+										events: {
+											click: function () {
+												window.location.href = '/screenviewrequest?cancelledaction=' + point.cancelled + '&mainaction=singlechart&subaction=specificMonth&statusaction=cancelled&monthaction=' + monthNames[point.month - 1] + '&yearaction=' + point.year + '&viewparamaction=' + point.viewRequestParam;
+											}
+										}
+									};
+								})
+							}
+							
+						];
+
+						Highcharts.chart('container-basic-column', {
+							chart: {
+								type: 'column',
+								backgroundColor: ''
+
+							},
+							title: {
+								text: 'Ticket Status Counts of year ' + year,
+								align: 'center',
+								style: {
+									color: '#141921',
+									 fontFamily: '"Lucida Console", monospace',
+								}
+
+							},
+							subtitle: {
+								// text: 'Source: your data'
+							},
+							xAxis: {
+								categories: data.map(function (point) {
+									return monthNames[point.month - 1];
+								}),
+								crosshair: true
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Count'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								borderColor: 'black',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:.0f}</b></td></tr><tr><td colspan="2" style="text-align:center"></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true,
+
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0,
+									cursor: 'pointer',
+									shadow: true,
+									dataLabels: {
+										enabled: true,
+										inside: true,
+										formatter: function () {
+											return this.y !== 0 ? this.y : '';
+										}
+									}
+								}
+							},
+							/* colors:['#E56EE5','#90ED7E','#7CB5EC','#FF0000'], */
+							    colors: ['#2f2f9e', '#272796', '#212154', '#20202e', '#070729', '#000008'],
+							series: chartData
+						});
+
+					},
+					error: function (xhr, status, error) {
+						console.log("Error fetching JSON data: " + error);
+					}
+				});
+			}
+			paramBody = null;
+		});
+
+
+		const monthNames = [
+			'Jan',
+			'Feb',
+			'March',
+			'April',
+			'May',
+			'June',
+			'July',
+			'Aug',
+			'Sep',
+			'Oct',
+			'Nov',
+			'Dec'
+		];
+
+
+	</script>
+	<!--  FIRST Column Basic CHART Start COLUMN END -->
+		
+</div>
+</body>
+</html>

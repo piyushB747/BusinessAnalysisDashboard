@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="executivejs">
+		<script th:inline="javascript">
+		
+		    		$(document)
+												.ready(
+														function() {
+															$('#candle-map')
+																	.click(
+																			function() {
+																				$(
+																						'#container-basic-column')
+																						.show();
+																				$(
+																						'#barstackcontainer')
+																						.hide();
+																				$(
+																						'#container-timeline')
+																						.hide();
+																				$(
+																						'#groupstackcontainer')
+																						.hide();
+																			});
+
+															$('#stack-grouped')
+																	.click(
+																			function() {
+																				$(
+																						'#container-basic-column')
+																						.hide();
+																				$(
+																						'#barstackcontainer')
+																						.hide();
+																				$(
+																						'#container-timeline')
+																						.hide();
+																				$(
+																						'#groupstackcontainer')
+																						.show();
+																			});
+
+															$('#bar-map')
+																	.click(
+																			function() {
+																				$(
+																						'#container-basic-column')
+																						.hide();
+																				$(
+																						'#barstackcontainer')
+																						.show();
+																				$(
+																						'#container-timeline')
+																						.hide();
+																				$(
+																						'#groupstackcontainer')
+																						.hide();
+																			});
+
+															$('#day-btn')
+																	.click(
+																			function() {
+																				$(
+																						'#container-basic-column')
+																						.hide();
+																				$(
+																						'#barstackcontainer')
+																						.hide();
+																				$(
+																						'#container-timeline')
+																						.show();
+																				$(
+																						'#groupstackcontainer')
+																						.hide();
+																			});
+														});
+		
+		</script>
+			<!-- HIGHCHART SCRIPT ALL START-->
+			
+		
+		
+				
+	<script th:src="@{/HC/code/highcharts.js}"></script>
+	<script th:src="@{/HC/code/modules/variable-pie.js}"></script>
+	<script th:src="@{/HC/code/modules/exporting.js}"></script>
+	<script th:src="@{/HC/code/modules/export-data.js}"></script>
+	<script th:src="@{/HC/code/modules/accessibility.js}"></script>
+	<script th:src="@{/HC/code/modules/drilldown.js}"></script>
+	<script th:src="@{/HC/code/highcharts.js}"></script>
+    <!--<script th:src="@{/HC/code/data.js}"></script>-->
+	<script th:src="@{/HC/code/modules/heatmap.js}"></script>
+
+	<script th:inline="javascript">
+		var rm_drilldown = "";
+
+		$('#rm-tab').click(function() {
+			rm_drilldown = "rm_drilldown";
+			$(document).trigger('rm_drilldown', rm_drilldown);
+		});
+
+		$('#region-tab').click(function() {
+			rm_drilldown = "region_drilldown";
+			$(document).trigger('rm_drilldown', rm_drilldown);
+		});
+
+		$('#state-tab').click(function() {
+			rm_drilldown = "state_drilldown";
+			$(document).trigger('rm_drilldown', rm_drilldown);
+
+		});
+	</script>
+	</div>
+</body>
+</html>

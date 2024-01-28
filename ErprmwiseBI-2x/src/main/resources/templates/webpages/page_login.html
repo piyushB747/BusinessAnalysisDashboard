@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	
+	<meta property="og:title" content="Erprmwise Business Intelligence">
+    <meta property="og:description" content="Track, Monitor, Succeed: No More Guesswork, Just Clarity in Field Service.">
+	<meta property="og:image" th:content="@{/images/favicon.png}">
+	<meta property="og:image:width" content="1200">
+	<meta property="og:image:height" content="800">
+	<meta property="og:url" content="https://intelli.uno/">
+	<meta property="og:type" content="website">
+
+	<meta charset="ISO-8859-1">
+	<title>Erprmwis BI</title>
+ 	<link rel="icon"  th:href="@{images/favicon.png}"> 	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+	<th:block th:replace="fragments/frag_header :: header"></th:block>
+	
+	<link th:href="@{/CustomCssJs/login.css}" rel="stylesheet"/>
+	
+<style th:inline="text">
+
+</style>
+
+</head>
+<body onload="clearLoginInputs();"  class="body">
+	<div class="form-box" id="login">
+		 	<link rel="icon"  th:href="@{BI_images/unopoint_geolocation_logo_1.png}"> 	
+			<span id="logo"></span>
+			<center><img th:src="@{images/UnoPoint.jpg}" alt="Description of the image" style="width: 60px;"></center><br>
+				<h1 class="header" style="color: white;">BUSINESS-INTELLIGENCE</h1>				
+				
+				<form th:action="@{/login}" method="post"  >
+					<!-- Error message -->
+					<center>
+						<div th:if="${param.error}" class="alert alert-danger" id="error">Invalid Credentials</div>
+						
+						<!--  <div th:if="${param.error==null}" class="alert alert-danger" id="error">Please fill Username and Password</div>-->
+						
+						
+					<center>
+					<!-- Logout message -->
+					<center><div th:if="${param.logout}" class="alert alert-info">You have been logged out.</div></center>
+
+					<div class="input-box">
+						<!--  <label for="username">Username</label> -->
+						<i class="fa-solid fa-envelope"></i>
+						<input type="text"  id="username" name="username" placeholder="Enter Username" autofocus="autofocus" autocomplete="off" />
+						
+					</div>
+					<!-- <p id="user" style="color:red;">Please Enter Username</p> -->
+
+					<div class="input-box">
+						<!--  <label for="password">Password</label> -->
+						<i class="fa-solid fa-key"></i>
+						<input type="password" id="password" name="password" placeholder="Password" autofocus="autofocus"  autocomplete="new-password" />
+						<span class="eye"  onclick="passwordShowHide()">
+							<i id="hide1" class="fa fa-eye"></i>
+							<i id="hide2" class="fa  fa-eye-slash"></i>
+						</span>
+					</div>
+					<div class="form-group text-center">
+						<button type="submit" class="login-btn" id="login-btn"><span id="login-btn-text">Login</span></button>
+					</div>
+					<div  >
+						<span >PASSWORD 
+						<a href="#" th:href="@{/passwordupdate}" class="update-link">UPDATE</a></span>
+					</div>
+					
+				</form>			
+	</div>
+<script>
+$(document).ready(function() {
+	    
+
+	//Login methods
+    $('#loginForm').submit(function(e) {
+      e.preventDefault(); // Prevent form submission
+
+      // Get the values of the input fields
+      var username = $('#username').val();
+      var password = $('#password').val();
+
+      // Validate if any input field is empty
+      if (username === ''){
+          //alert('Please enter username');
+          $("#user").show();
+          return false;
+      } 
+      else if(password === '') {
+          //alert('Please enter password');
+          $("#passw").show();
+          return false;
+      }
+      else if(username!==''){
+    	  $("#user").hide();
+      }
+      else if(password!==''){
+    	  $("#passw").hide();
+      }
+    });
+    
+    
+    $("#user").hide();
+    $("#passw").hide();
+    
+    $("#login-btn").click(function(){
+		$("#login-btn-text").animate({left:"50px"});
+	});
+    
+});
+
+function validateLoginForm() {
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+
+    if (username === '' || password === '') {
+      alert('Please enter both username and password.');
+      return false;
+    }
+  }
+	
+	function passwordShowHide(){
+		var passw=document.getElementById('password');
+		var hide1=document.getElementById('hide1');
+		var hide2=document.getElementById('hide2');
+		if(passw.type==="password"){
+			passw.type="text";
+			hide1.style.display="block";
+			hide2.style.display="none";
+		}
+		else{
+			passw.type="text";
+			hide1.style.display="none";
+			hide2.style.display="show";
+		}
+	}
+	
+	
+    function clearLoginInputs() {
+     var usernameInput = document.getElementById('username');
+      var passwordInput = document.getElementById('password');
+
+      usernameInput.value = '';
+      passwordInput.value = '';
+    }
+    
+    
+    
+  
+    
+    //Password Update methods
+    //Hide and Show password
+	function passwordShowHide(){
+		var passw=document.getElementById('password');
+		var hide1=document.getElementById('hide1');
+		var hide2=document.getElementById('hide2');
+		if(passw.type==="password"){
+			passw.type="text";
+			hide1.style.display="block";
+			hide2.style.display="none";
+		}
+		else{
+			passw.type="password";
+			hide1.style.display="none";
+			hide2.style.display="block";
+		}
+	}
+	
+	
+    function clearLoginInputs() {
+     var usernameInput = document.getElementById('username');
+      var passwordInput = document.getElementById('password');
+
+      usernameInput.value = '';
+      passwordInput.value = '';
+    }
+    
+    //Confirm password match
+    function validatePassword() {
+        var password = document.getElementById('password').value;
+        var confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password !== confirmPassword) {
+          alert("Passwords do not match!");
+          return false;
+        }
+      }
+    
+    $(document).ready(function() {
+        $('#loginForm').submit(function(e) {
+          e.preventDefault(); // Prevent form submission
+
+          // Get the values of the input fields
+          var username = $('#username').val();
+          var password = $('#password').val();
+
+          // Validate if any input field is empty
+          if (username === '' || password === '') {
+            alert('Please fill in all fields');
+            return false; // Prevent form submission
+          }
+        });
+    });
+  </script>
+</body>
+</html>

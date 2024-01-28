@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>Real Time</title>
+<th:block th:replace="fragments/frag_header :: header"></th:block>
+<link rel="icon"  th:href="@{images/favicon.png}">
+  
+<link th:href="@{CustomCssJs/marginapproximation.css}" rel="stylesheet" />
+</head>
+  <body class="">
+
+<form th:action="@{/submit}" th:object="${dtorealtimeapproximation}" method="post">
+
+       	    <!-- SIDEBAR START -->
+			     <div th:replace="fragments/frag_sidebar :: executive_sidebar"></div>
+			<!-- SIDEBAR END -->
+
+			<!-- Navigation bar Start Here -->
+			     <div th:replace="fragments/frag_nav :: executive_navbar"></div>
+			<!-- Navigation bar Ends Here -->
+			
+			<main class="content">
+			      <div class="Header pl-3">
+					<div class="h3">
+						<b>Real Time</b>
+					</div>
+				  </div>
+				 
+				 <div class="card" style="border-radius:5px;">
+				    <div class="row m-3">
+						     <div class="form-group col-md-2">
+										<label for="avgcostperticketid" class="label-input">Principle Customer:</label>
+								     <select class="input-btn" id="pctype" style="width:200px;font-size: 12px;" th:field="*{pcId}">
+										<option value="All">All</option>
+										<option th:each="task : ${dropPClist}"
+											th:text="${task.customernamePcm}" th:value="${task.typeid}"></option>
+									</select>
+								</div>
+								
+								  <div class="form-group col-md-2" style="margin-left:50px;">
+								     <label for="date-dropdown" class="label-input">YTD:</label> 
+								     <select class="input-btn" id="date-dropdown"></select>
+								 </div>
+								
+								<div class="form-group col-md-2" style="margin-top:20px;margin-left:140px">
+										  <a onclick="fetchDataToDisplay()"
+												  class="input-btn" id="calculatebtn" 
+												   style="padding-bottom:3px;padding-top:3px;border-radius:5px;padding-right:15px;padding-left:15px; background-color: black; color: white; text-align: center; text-decoration: none; border-radius: 4px; cursor: pointer;font-size:smaller;">
+										   CALCULATE
+										   </a> 
+							    </div>
+				
+						
+				    </div>
+				 </div> 
+                  
+            
+      				
+                    <!-- Model Is Place Here -->
+                    <div id="tabulardrilldown">
+                					<div th:replace="fragments/realtimemargin/frag_tabulardrilldown :: realtimemargindrilldown"></div>
+      				</div>
+      				<!-- Model Is Place Here -->
+			</main>
+</form>
+    <script th:inline="javascript">
+//Make a POST request to the controller endpoint
+
+
+
+	            var pcId ="";
+	          
+	            document.getElementById("pctype").addEventListener("change", function () {
+											// Get the selected RegionId value
+					  pcId = this.value;
+			    });						
+											
+             function fetchDataToDisplay(){	
+				 
+				 
+				 
+            	var m_strYear=document.getElementById("date-dropdown").value;
+				var mainUrlGetRealTimemarginapi = /*[[@{/realtimemarginapi}]]*/ + "";
+				var mainUrl = mainUrlGetRealTimemarginapi + "" + "?pcId="+pcId+"&year="+m_strYear;
+				  
+				fetch(mainUrl)
+	    	      .then(response => response.json())
+	    	      .then(data => {
+	    	        
+	    	        const mainGrid = document.querySelector('#mainGrid');
+	    	       
+	    	        const zgData = mainGrid.querySelector('zg-data');
+	    	        console.log("MAIN JSON= "+JSON.stringify(data)+" SUKRIYA");
+	    	        zgData.setAttribute('data', JSON.stringify(data));
+	    	        
+	    	        mainGrid.refresh(); 
+	    	          applycsstothegrid();
+	    	      })
+	    	      .catch(error => {
+	    	        console.error('Error loading data:', error);
+	    	      });
+				
+			}
+			
+			  
+							function applycsstothegrid() {
+								// Find all zg-head-cell elements
+								const zgHeadCells = document.querySelectorAll('zg-head-cell');
+
+								// Loop through each zg-head-cell
+								zgHeadCells.forEach(cell => {
+									// Find the span element within the zg-head-cell
+									const spanElement = cell.querySelector('span');
+
+									// Check if the span element exists
+									if (spanElement) {
+										// Apply styles to the span element
+										 const spanTextContent = spanElement.textContent.trim();
+										
+										 const spanId = 'span-id-'+spanTextContent; // Creating a unique ID for each span
+    								     spanElement.setAttribute('id', spanId);
+										
+										//spanElement.style.fontWeight = 'bold';
+										spanElement.style.fontFamily = 'Consolas';
+            							spanElement.style.fontSize = '14px';
+										spanElement.style.color = '#a11b5a';
+										// Add any other styles you want to apply
+									}
+								});
+
+							}
+					
+			  
+			  
+			  
+		  
+			  let dateDropdown = document.getElementById('date-dropdown'); 
+			  let currentYear = new Date().getFullYear();    
+			  let earliestYear = 1970;     
+			  while (currentYear >= earliestYear) {      
+			    let dateOption = document.createElement('option');          
+			    dateOption.text = currentYear;      
+			    dateOption.value = currentYear;        
+			    dateDropdown.add(dateOption);      
+			    currentYear -= 1;    
+			  }
+			
+</script>
+<!-- Added by Vasim on 10-08-2023-->
+<script>
+	
+	$(document).ready(function(){
+		$("#tabulardrilldown").hide();
+		$("#calculatebtn").click(function(){
+			$("#tabulardrilldown").show();
+		})
+		
+
+
+
+	});
+	
+</script>
+</body>
+</html>

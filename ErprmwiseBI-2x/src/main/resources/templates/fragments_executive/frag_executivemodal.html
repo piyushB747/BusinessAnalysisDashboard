@@ -1,0 +1,359 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  
+  <div th:fragment="executivehomescreenmodel">
+  
+     		<!-- Model for filter Start-->
+		<div class="modal fade" id="exampleModalCenter" tabindex="-1"
+			role="dialog" aria-labelledby="exampleModalCenterTitle"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-lg"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLongTitle">Filter</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+
+					<div class="modal-body row">
+
+						<div class="col-md-4">
+							<label style="width: 130px;">Region</label>: <select
+								class="dropdown1" id="dropdownRegionId" th:field="*{regionId}">
+								<option value="All">All</option>
+								<option th:each="task : ${regionlist}"
+									th:text="${task.typevalueRm}" th:value="${task.typeidRm}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;" for="myDropdownPrinceCustomer">State</label>:
+							<select class="dropdown1" id="myDropdownState"
+								th:field="*{typeidCust}">
+								<option value="All">All</option>
+								<option th:each="task : ${statelist}"
+									th:text="${task.typevalueSm}" th:value="${task.typeidSm}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;">Pop location</label>: <select
+								class="dropdown1" id="myDropdownPop" th:field="*{typeidPop}">
+								<option value="All">All</option>
+								<option th:each="task : ${poplist}"
+									th:text="${task.typevalueLm}" th:value="${task.typeidLm}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;">City </label>: <select
+								class="dropdown1" id="myDropdownCity" th:field="*{cityId}">
+								<option value="All">All</option>
+								<option th:each="task : ${citylist}"
+									th:text="${task.typevalueCm}" th:value="${task.typeidCm}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;">Business Unit </label>: <select
+								class="dropdown1" id="myDropdownBum" th:field="*{typeidBumDto}">
+								<option value="All">All</option>
+								<option th:each="task : ${bulist}"
+									th:text="${task.typevalueBum}" th:value="${task.typeidBum}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;">Principle Customer</label>: <select
+								class="dropdown1" id="myDropdownPc" th:field="*{pcId}">
+								<option value="All">All</option>
+								<option th:each="task : ${dropPClist}"
+									th:text="${task.customernamePcm}" th:value="${task.typeid}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;">Customer</label>: <select
+								class="dropdown1" id="myDropdownCust" th:field="*{typeidCust}">
+								<option value="All">All</option>
+								<option th:each="task : ${dropCustlist}"
+									th:text="${task.customernameCm}" th:value="${task.typeidCm}"></option>
+							</select>
+						</div>
+						<div class="col-md-4">
+							<label style="width: 130px;" for="myDropdownForYear">Select
+								Year</label>: <select class="dropdown1" id="myDropdownForYear">
+								<option value="2019">2019</option>
+								<option value="2020">2020</option>
+								<option value="2021">2021</option>
+								<option value="2022">2022</option>
+								<option value="2023">2023</option>
+							</select>
+						</div>
+
+
+
+						<script th:inline="javascript">
+
+							/***For Region And State DropDown Start***/
+							var stateDropdown = document.getElementById("myDropdownState");
+							var popdropdownAll = document.getElementById("myDropdownPop");
+							var citydropdownAll = document.getElementById("myDropdownCity");
+
+							// Add an event listener to the Region dropdown
+							document.getElementById("dropdownRegionId").addEventListener("change", function () {
+								// Get the selected RegionId value
+								var pcId = this.value;
+								
+								var url = /*[[@{/getstatesbyregion}]]*/ + "";
+								var urlAdd = '?regionaction=' + pcId;
+								var finalUrl = url + urlAdd;
+								
+								// Make an Ajax request to fetch the State data
+								fetch(finalUrl)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										stateDropdown.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidSm;
+											option.text = customer.typevalueSm;
+											stateDropdown.add(option);
+										});
+									});
+
+								// Make an Ajax request to fetch the State data
+								var url2 = /*[[@{/getlocationbystate}]]*/ + "";
+								var urlAdd2 = '?regionIdaction=' + pcId;
+								var finalUrlFetchStateData = url2 + urlAdd2;
+								fetch(finalUrlFetchStateData)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										popdropdownAll.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidLm;
+											option.text = customer.typevalueLm;
+											popdropdownAll.add(option);
+										});
+									});
+
+
+								// Make an Ajax request to fetch the Ciyy data
+								var url3 = /*[[@{/getcitybypop}]]*/ + "";
+								var urlAdd3 = '?regionIdaction=' + pcId;
+								var finalUrlFetchCityData = url3 + urlAdd3;
+								//fetch('/getcitybypop?regionIdaction=' + pcId)
+								fetch(finalUrlFetchCityData)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										citydropdown.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidCm;
+											option.text = customer.typevalueCm;
+											citydropdown.add(option);
+										});
+									});
+
+							});
+							/***For Region And State DropDown End***/
+
+
+
+
+
+							/***For State And Poplocation DropDown Start***/
+							var popdropdown = document.getElementById("myDropdownPop");
+							var city_dropdown = document.getElementById("myDropdownCity");
+
+							// Add an event listener to the Region dropdown
+							document.getElementById("myDropdownState").addEventListener("change", function () {
+								// Get the selected RegionId value
+								var pcId = this.value;
+
+								// Make an Ajax request to fetch the State data
+								var url4 = /*[[@{/getlocationbystate}]]*/ + "";
+								var urlAdd4 = '?stateaction=' + pcId;
+								var finalUrlFetchCityAndStateData = url4 + urlAdd4;
+								fetch(finalUrlFetchCityAndStateData)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										popdropdown.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidLm;
+											option.text = customer.typevalueLm;
+											popdropdown.add(option);
+										});
+									});
+
+								
+								// Make an Ajax request to fetch the State data
+								var url5 = /*[[@{/getcitybypop}]]*/ + "";
+								var urlAdd5 = '?popstateactionId=' + pcId;
+								var finalUrlFetchCityAndStateData5 = url5 + urlAdd5;
+								//fetch('/getcitybypop?popstateactionId=' + pcId)
+								fetch(finalUrlFetchCityAndStateData5)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										city_dropdown.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidCm;
+											option.text = customer.typevalueCm;
+											city_dropdown.add(option);
+										});
+									});
+
+
+							});
+							/***For State And Poplocation DropDown Start***/
+
+
+
+
+
+
+							/***For City And Poplocation DropDown Start***/
+							var citydropdown = document.getElementById("myDropdownCity");
+
+							// Add an event listener to the Region dropdown
+							document.getElementById("myDropdownPop").addEventListener("change", function () {
+								// Get the selected RegionId value
+								var pcId = this.value;
+
+								var url6 = /*[[@{/getcitybypop}]]*/ + "";
+								var urlAdd6 = '?popaction=' + pcId;
+								var finalUrlgetCitybyPop6 = url6 + urlAdd6;
+								// Make an Ajax request to fetch the State data
+								//fetch('/getcitybypop?popaction=' + pcId)
+								fetch(finalUrlgetCitybyPop6)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										citydropdown.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidCm;
+											option.text = customer.typevalueCm;
+											citydropdown.add(option);
+										});
+									});
+							});
+							/***For City And Poplocation DropDown Start***/
+
+
+
+							/**BU PC CUstomer Starts**/
+
+							var princCustomerDropdownBu = document.getElementById("myDropdownPc");
+							var customerDropdownBu = document.getElementById("myDropdownCust");
+							// Add an event listener to the principle customer dropdown
+							document.getElementById("myDropdownBum").addEventListener("change", function () {
+								// Get the selected principle customer value
+								var pcId = this.value;
+
+
+								// Make an Ajax request to fetch the customer data
+								//fetch('/getPricipalcust?buIdaction=' + pcId)
+								var url7 = /*[[@{/getPricipalcust}]]*/ + "";
+								var urlAdd7 = '?buIdaction=' + pcId;
+								var finalUrlgetCitybyPop7 = url7 + urlAdd7;
+								fetch(finalUrlgetCitybyPop7)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										princCustomerDropdownBu.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeid;
+											option.text = customer.customernamePcm;
+											princCustomerDropdownBu.add(option);
+										});
+									});
+
+								var url8 = /*[[@{/getCustomers}]]*/ + "";
+								var urlAdd8 = '?buIdaction=' + pcId;
+								var finalUrlgetCustomers8 = url8 + urlAdd8;
+								// Make an Ajax request to fetch the customer data
+								//fetch('/getCustomers?buIdaction=' + pcId)
+								fetch(finalUrlgetCustomers8)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										customerDropdownBu.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidCm;
+											option.text = customer.customernameCm;
+											customerDropdownBu.add(option);
+										});
+									});
+							});
+							/**BU PC CUstomer Starts**/
+
+
+							/**PC CUstomer Starts**/
+							var customerDropdown = document.getElementById("myDropdownCust");
+
+							// Add an event listener to the principle customer dropdown
+							document.getElementById("myDropdownPc").addEventListener("change", function () {
+								// Get the selected principle customer value
+								var pcId = this.value;
+
+								// Make an Ajax request to fetch the customer data
+								var url9 = /*[[@{/getCustomers}]]*/ + "";
+								var urlAdd9 = '?pcId=' + pcId;
+								var finalUrlgetCustomers9 = url9 + urlAdd9;
+								fetch(finalUrlgetCustomers9)
+									.then(response => response.json())
+									.then(data => {
+										// Clear the existing options in the customer dropdown
+										customerDropdown.innerHTML = '<option value="All">All</option>';
+
+										// Add the new options to the customer dropdown
+										data.forEach(customer => {
+											var option = document.createElement("option");
+											option.value = customer.typeidCm;
+											option.text = customer.customernameCm;
+											customerDropdown.add(option);
+										});
+									});
+							});
+							/**PC CUstomer Ends**/
+						</script>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">Close</button>
+							<button type="button" class="btn btn-primary"
+								id="myButtonForChartData">Save changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Model End -->
+		</div>
+ </div>
+ 
+</body>
+</html>

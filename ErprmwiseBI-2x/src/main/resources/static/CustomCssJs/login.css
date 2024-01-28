@@ -1,0 +1,138 @@
+body{
+	    background-image: url("../BI_images/b5.jpeg");
+	background-repeat: no-repeat;
+    background-size: cover;
+}
+.logo{
+		background-image: url("../BI_images/UNOLOGO.ico");
+
+}
+.header{
+	text-align:center;
+}
+
+form *{
+    font-family: 'Poppins',sans-serif;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    outline: none;
+    border: none;
+}
+
+
+
+
+
+.form-box{
+    width: 500px;
+    margin:2% auto;
+    margin-left: 690px;
+    padding: 50px 35px;
+    color: #fff;
+    box-shadow: 0 0 20px 2px rgba(0,0,0,0.5);
+    font-size:14px;
+    top: 50%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    transition:1s ease-in-out;
+    opacity: 4.0;
+    
+}
+.form-box.active login-btn{
+	transform:translatY(-450);
+}
+
+form:last-child{
+    background: linear-gradient(
+        to right,
+        #ff512f,
+    );
+    right: -30px;
+    bottom: -80px;
+}
+
+h1{
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: bold;
+    font-size: 18px;
+    color: ghostwhite;
+}
+.input-box{
+    
+    margin:31px auto;
+    width: 80%;
+    border-bottom: 1px solid #fff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.input-box input{
+    width:90%;
+    border: red;
+    outline: none;
+    background: transparent;
+    color:white;
+    font-weight: 300;
+    transition:.5s;
+    font-size: 16px;
+
+}
+
+
+
+.fa{
+	margin-right:50px;
+}
+::placeholder{
+    color: #ccc;
+}
+.eye{
+	  position: absolute;
+}
+#hide1{
+	display:none;
+}
+.login-btn{
+	margin:40px auto 20px;
+	width:80%;
+	display:block;
+	outline:none;
+	padding:10px 0;
+	border:1px solid #fff;
+	border-radius: 30px;
+	cursor:pointer;
+	background: transparent;
+	color:#fff;
+	font-size:16px;
+	font-size: 16px;
+	font-weight: 600;
+}
+
+.login-btn:hover{
+		 box-shadow: 0px 0px 2px 2px lightskyblue;
+}
+ 
+#error{
+	font-weight:bold;
+	font-size:16px;
+	background-color:white;
+	width:400px;
+	color:red;
+	border-radius: 10px;
+}
+
+.update-link{
+	color:white;
+	font-size:14px;
+	text-align:center;
+	margin:15px 0;
+}
+
+.input-box input:focus~input,
+.input-box input:valid~input {
+	top: -5px;
+}
+

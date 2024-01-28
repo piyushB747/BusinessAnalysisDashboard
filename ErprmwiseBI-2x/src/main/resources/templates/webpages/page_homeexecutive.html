@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<th:block th:replace="fragments/frag_header :: header"></th:block>
+<title>Home Screen</title>
+<link rel="icon"  th:href="@{images/favicon.png}">
+</head>
+
+<body>
+	<!-- FORM Starts -->
+	<form th:action="@{/}" method="post"
+		th:object="${dtoexhome}">
+		<!-- WRAPPER STARTS HERE -->
+		<div class="wrapper">
+			<!-- Main container OF Screen Start -->
+			<div class="main">
+
+				<!-- SIDEBAR START -->
+				<div th:replace="fragments/frag_sidebar :: executive_sidebar"></div>
+				<!-- SIDEBAR END -->
+
+				<!-- Nav bar Start Here -->
+				<div th:replace="fragments/frag_nav :: executive_navbar"></div>
+				<!-- Nav bar Ends Here -->
+
+
+				<!-- MAIN CONTENT BEGAINS FROM HERE  -->
+				<main class="content">
+					<!-- FLUID CONTAINER START -->
+					<div class="container-fluid p-0">
+
+						<div class="Header pl-3"></div>
+
+
+						<div class="row">
+							<div class="col-md-8">
+								<!-- HEADER DIV STARTS -->
+
+								<div class="col-12 col-xxl-12 p-3">
+									<div th:replace="fragments_executive/frag_executiveheader :: executiveheader"></div>
+								</div>
+								<!-- HEADER DIV ENDS -->
+
+								<!-- First ROW WITH TWO GRAPH -->
+								<div class="row" Style="text-align: center;">
+
+									<!-- SECOND COLUMN START -->
+									<div class="row ml-1">
+
+										<div class="col-12 col-md-12 col-xxl-12 d-flex order-5 order-xxl-2">
+											<div class="flex-fill w-100">
+
+												<div class="card-body px-2 px-md-4">   <!--CARD BODY STARTS HERE-->
+											    <a class="dropdown-toggle d-flex" data-bs-toggle="dropdown" aria-expanded="false" style="margin-left: 50px;">
+												<ion-icon name="list-outline" style="font-size: 24px;"></ion-icon></a>
+													<ul class="data-button dropdown-menu" style="width:100px">
+														<li class="p-2" style="border-bottom: 1px solid; text-align: center;"><a class="switch-map" id="candle-map" style="width: 100px; border: none; display: inline-block;"><img th:src="@{/BI_images/bar-chart.png}" style="width: 20px;"></a></li>																					
+														<li class="p-2" style="border-bottom: 1px solid; text-align: center;"><a class="switch-map" id="bar-map" style="width: 100px; border: none; display: inline-block;"><img th:src="@{/BI_images/statistic.png}" style="width: 20px;"></a></li>
+	                                                    <li class="p-2" style="text-align: center;"><a class="switch-map" id="stack-grouped" style="width: 100px; border: none; display: inline-block;"><img th:src="@{/BI_images/bar-chart (1).png}" style="width: 20px;"></a></li>
+												    </ul>
+													<div class="container">
+														<div th:replace="fragments_executive/frag_basiccolumn :: basic-column"></div>
+														<!--<div th:replace="fragments_executive/frag_barstack :: bar-stacked"></div>
+														
+														<div th:replace="fragments_executive/frag_groupstacked :: groupstacked"></div>-->
+													</div>
+												</div>    <!--CARD BODY STARTS HERE-->
+												
+											</div>	
+										</div>
+										
+									</div>  <!-- SECOND COLUMN ENDS HERE -->
+									
+									<div>
+										<!-- Button trigger modal -->
+
+										 <div th:replace="fragments_executive/frag_heatmap :: heatmap"></div>
+									</div>
+									<!-- SECOND COLUMN END -->
+
+                                    
+								</div>
+								<!--END  First ROW WITH TWO GRAPH -->
+							</div>
+							<div class="col-md-4">
+								<div class="piecard" style="height: 500px">
+									
+                                      <!-- Line Graph Is Place Here -->
+									   <!--     <div th:replace="fragments_executive/frag_line :: line"></div>-->
+									    <!-- Line Graph Is Place Here -->
+								</div>
+								<div class="piecard1" style="height: 450px">
+									
+								<!-- Mix Graph Is Place Here -->
+								        <!--<div th:replace="fragments_executive/frag_mixgraph :: mixgraph"></div>-->
+								    <!-- Mix Graph Is Place Here -->
+
+								</div>
+							</div>
+						</div>
+
+						<!-- SECOND First ROW WITH TWO GRAPH ENDS -->
+						<div class="row" Style="text-align: center">
+
+							<div
+								class="col-12 col-md-12 col-xxl-12 d-flex order-5 order-xxl-2 card"
+								style="overflow: scroll; height: 700px;">
+								<div class="data-button">
+									<a class="switch-map btn" id="rm-tab" >Reporting Manager View</a>
+									<a class="switch-map btn" id="region-tab">Region View</a>
+									<a class="switch-map btn" id="state-tab">State View</a>
+								</div>
+
+
+								<div th:replace="fragments_executive/frag_olddatatable :: olddatatable"></div>
+
+							</div>
+
+						</div>
+						<!-- SECOND First ROW WITH TWO GRAPH ENDS -->
+
+					</div>
+					<!-- FLUID CONTAINER END -->
+
+					<!-- FORM ENDS -->
+
+
+
+				</main>
+				<!-- MAIN CONTENT ENDS HERE  -->
+
+
+				<!-- FOOTER START HERE -->
+				<div th:replace="fragments/frag_footer :: footer"></div>
+				<!-- FOOTER ENDS HERE -->
+
+			</div>
+			<!-- Main container OF Screen Start -->
+
+		</div>
+		<!-- WRAPPER ENDS HERE -->
+
+		<!-- Model Is Place Here STARTS -->
+		<div th:replace="fragments_executive/frag_executivemodal :: executivehomescreenmodel"></div>
+		<!-- Model Is Place Here ENDS-->
+
+	</form>
+
+
+					<div th:replace="fragments_executive/frag_executivejs :: executivejs"></div>
+</body>
+
+</html>

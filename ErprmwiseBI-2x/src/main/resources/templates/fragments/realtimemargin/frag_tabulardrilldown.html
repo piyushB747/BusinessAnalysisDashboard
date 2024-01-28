@@ -1,0 +1,399 @@
+
+
+<div th:fragment="realtimemargindrilldown">
+
+<head>
+
+<link th:href="@{CustomCssJs/marginapproximation.css}" rel="stylesheet" />
+<script  nonce="undefined" th:src="@{/zinggrid-master/dist/zinggrid.min.js}" defer></script>
+
+<!-- This new style Added by Vasim on 10-08-2023-->
+<style>
+
+	
+
+			/**
+ * toggle container just holds a relative position 
+ * since we are going to stack the grids on top of 
+ * one another */
+			.toggle-container {
+				position: relative;
+				font-family: Arial, sans-serif;
+				max-width: 1300px;
+				max-height:1500px;
+				margin: 0 auto;
+				
+
+			}
+
+
+			.zg-body button {
+				text-align: center;
+				background: #07C;
+				color: #FFF;
+				cursor: pointer;
+				border-radius: 3px;
+				font-size: 0.85rem;
+				padding: 5px 20px;
+				cursor: pointer;
+				margin: 15px 0 15px 15px;
+				position: relative;
+			}
+
+			button:hover {
+				background: #1b6ead;
+			}
+
+			zing-grid {
+				/* make sure bottom grid is not interactive */
+				visibility: hidden;
+				pointer-events: none;
+				opacity: 0;
+				position: absolute;
+				top: 0;
+				left: 0;
+				border: 1px solid #ccc;
+				margin: 20px auto;
+				background-color: white;
+				border: 1px solid #ddd;
+				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+				margin-bottom: 20px;
+
+			}
+
+
+
+			zing-grid.active {
+				visibility: visible;
+				pointer-events: initial;
+				opacity: 1;
+			}
+
+			/* we target zg-body first so we don't highlight the header cells */
+			zg-body zg-row {
+				cursor: pointer;
+			}
+
+			zing-grid[loading] {
+				height: 450px;
+			}
+
+			zing-grid {
+				--zg-caption-background: red;
+			}
+
+			zg-column::part(header-label) {
+				background-color: #EF5350;
+			}
+
+			:root {
+				/* define custom colors for build status */
+				--build-success: #00c853;
+				--build-failed: #d50000;
+				--build: pending: #ffab00;
+				--zg-caption-background: #3f51b5;
+				--zg-caption-color: #fff;
+			}
+
+
+
+			zg-index {
+				color: rgb(255, 255, 128);
+			}
+
+			zing-grid zing-colgroup {
+				background-color: #f2f2f2;
+			}
+
+			zing-grid zg-column {
+				padding: 5px;
+			}
+
+			zing-grid zg-caption {
+				background-color:#f5f1bc;
+				color: rgb(0, 0, 0);
+				padding: 2px;
+				border: 1px solid black;
+				
+			}
+
+			zing-grid zg-data {
+				border-bottom: 1px solid #ccc;
+			}
+
+			#mainhead {
+				background: white;
+				color: white;
+			}
+
+			
+
+
+			#mainGrid {
+				width: 100%;
+				max-width: 100%;
+				margin: 0 auto;
+			}
+
+			#mainGrid caption {
+				font-size: 1.5rem;
+				font-weight: bold;
+				margin-bottom: 10px;
+			}
+
+			#mainGrid zg-column {
+				padding: 2px;
+			}
+
+
+			#mainGrid zg-column-header {
+				background-color: #f1f1f1;
+				font-weight: bold;
+				color: #d50000;
+			}
+
+			#mainGrid zg-cell {
+				background-color: #fff;
+				border-bottom: 1px solid #ddd;
+			}
+
+
+			#mainGrid zg-row:nth-child(odd) zg-cell {
+				background-color: #f9f9f9;
+			}
+
+
+			#mainGrid img {
+				max-width: 100%;
+				max-height: 100%;
+			}
+
+			#mainGrid caption {
+				font-size: 1.5rem;
+				font-weight: bold;
+				color: red;
+				margin-bottom: 10px;
+
+			}
+
+			button {
+				background-color: #f5f1bc;
+				color: #fff;
+				border: 2px solid black;
+				border-radius: 5px;
+				padding: 5px 10px;
+				font-size: 1rem;
+				cursor: pointer;
+				transition: background-color 0.3s ease, transform 0.2s ease;
+			}
+
+			button:hover {
+				background-color: #175c87;
+				transform: scale(1.05);
+			}
+
+			zg-column::part(header-label) {
+				background-color: rgb(255, 255, 0);
+				color: #fff;
+			}
+
+			#childCaptionText {
+				color: #607d8b;
+				/* Change child caption text color */
+			}
+
+			#mainGrid caption {
+				font-size: 2rem;
+				font-weight: bold;
+				color: #3f51b5;
+				/* Change header text color */
+				margin-bottom: 20px;
+				/* Add more spacing below the header */
+			}
+
+			#childCaptionText a {
+				color: #ff5722;
+				/* Change link color */
+				text-decoration: none;
+				margin-left: 10px;
+				/* Add spacing between caption text and link */
+				font-weight: bold;
+			}
+
+			#childCaptionText a:hover {
+				text-decoration: underline;
+				/* Add underline on link hover */
+			}
+
+			zing-grid::part(caption) {
+				background-color: #3f51b5;
+				/* Change header background color */
+				color: #ffffff;
+				/* Change header text color */
+				font-size: 2rem;
+				font-weight: bold;
+				padding: 10px;
+				margin-bottom: 20px;
+				/* Add more spacing below the header */
+			}
+			.columndata{
+				    text-align: left;
+				    margin-left:30px;
+			}
+			
+			zg-head {
+				/* define custom colors for build status */
+				background-color: rgb(255, 255, 255);
+				/*
+				color: #173e6e;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 2px;
+				border-bottom: 1px solid ccc;*/
+			}
+
+
+			zg-row {
+				/*background: rgb(255, 0, 0);*/
+				 background-color: #eef2eb;
+			}
+			
+			#mainhead{
+				background-color: rgb(255, 255, 255);
+			    padding: 10px;
+			    /*border-bottom: 1px solid rgb(0, 0, 0);  
+			    border-top: 1px solid rgb(0, 0, 0); */ 
+			    border: 1px solid rgb(0, 0, 0);  
+			    font-weight: bold;
+			    color: #333;
+			    text-align: left;
+		    /*text-transform: uppercase;*/
+			}
+		</style>
+	</head>
+
+	<body class="zg-body">
+
+		
+
+		<div class="toggle-container">
+
+
+			<zing-grid id="mainGrid" class="active">
+				
+			<zg-data data='[]'></zg-data> 
+			<zg-colgroup> 
+				<zg-column index="m_strCustomerName" header="Customer Name" type="element"
+					type-element-tag-name="h5"></zg-column> 
+					
+				<zg-column index="m_strTotalTicketsForCustomer" header="Total Tickets"
+					type="element" type-element-tag-name="h5"></zg-column> 
+				<zg-column index="m_strContractValueOfCustomer" header="Contract Value"
+				align="center"></zg-column>
+				 
+				<zg-column index="m_strDblcostPerTicketTotal" header="Engineer Avg Cost"
+				align="center"></zg-column> 
+				<zg-column index="m_strTotalClaimTicketsForCustomer"
+				header="Claim Total Tickets" align="center"></zg-column>
+				 <zg-column index="m_strTotalClaimApprovedTicketForCustomer"
+				header="Approved Claim Tickets" align="center"></zg-column> 
+				<zg-column index="m_strTotalClaimApprovedAmountForCustomer"
+				header="Total Claim Approved Amount" align="center"></zg-column>
+				 <zg-column index="n_intTotalSparedTicketForCustomer"
+				header="Total Spares Consumed Tickets" align="center"></zg-column>
+				 <zg-column index="m_strSparesConsumedCostForCustomer"
+				header="Total Spares Consumed Cost" align="center"></zg-column> 
+				<zg-column index="m_strTotalAvgCostOfEngForCustomer"
+				header="Avg Cost Of Engineer" align="center"></zg-column> 
+				<zg-column index="m_strMargin" header="Margin" align="center"></zg-column>
+				 <zg-column index="m_strPercentage" header="Percentage" align="center"></zg-column>
+			    <zg-column type="image" index="m_strIndexProfitLossBoth"
+				header="Index" content-style="width:25px;height:25px;"
+				align="center"></zg-column> <!-- Add other properties for the main grid here -->
+			</zg-colgroup> 
+			</zing-grid>
+
+			<zing-grid id="childGrid"> <zg-caption> <span
+				id="childCaptionText">Default Text</span> <a
+				onClick="_toggleGrids()">&lt;&lt; Back</a> </zg-caption> <zg-colgroup>
+			<zg-column index="m_strEngName" header="Engineer Name" align="center"></zg-column>
+			<zg-column index="m_strEngTotalTickets" header="Total Tickets"
+				align="center"></zg-column> <zg-column index="m_strAvgCostPerTicket"
+				header="Average Cost Per Ticket" align="center"></zg-column> <zg-column
+				index="m_strClaimApprovedTotalTicket"
+				header="Claim Approved Total Tickets" align="center"></zg-column> <zg-column
+				index="m_strClaimAmmountTotal" header="Claim Amount Total"
+				align="center"></zg-column> <zg-column
+				index="m_strClaimPendingTickets" header="Pending Claim Tickets"
+				align="center"></zg-column> <zg-column
+				index="m_strClaimPendingAmmounts" header="Pending Claim Amounts"
+				align="center"></zg-column> <zg-column
+				index="m_strSpareConsumedTotalTickets"
+				header="Spares Consumed Total Tickets" align="center"></zg-column> <zg-column
+				index="m_strSpareConsumedCost" header="Spare Consumed Total Cost"
+				align="center"></zg-column> <!-- Add other properties for the child grid here -->
+			</zg-colgroup> </zing-grid>
+
+		</div>
+		<script th:inline="javascript">
+
+    	  function _toggleGrids() {
+    	    mainGrid.classList.toggle('active');
+    	    childGrid.classList.toggle('active');
+    	  }
+
+    	  window.addEventListener('load', () => {
+    	    const mainGrid = document.querySelector('#mainGrid');
+    	    const childGrid = document.querySelector('#childGrid');
+              
+    	    mainGrid.addEventListener('row:click', function(e) {
+				 
+    	      const zgData = e.detail.ZGData.data;
+    	    
+    	      document.getElementById('childCaptionText').textContent = zgData.m_strCustomerName;
+
+    	      const childData = zgData.approximateMarginJson;
+    	      childGrid.setData(childData);
+              applycsstothegrid();
+    	      _toggleGrids();
+    	      
+    	    });
+    	  });
+    	  
+    	  
+   			  
+							function applycsstothegrid() {
+								// Find all zg-head-cell elements
+								const zgHeadCells = document.querySelectorAll('zg-head-cell');
+
+								// Loop through each zg-head-cell
+								zgHeadCells.forEach(cell => {
+									// Find the span element within the zg-head-cell
+									const spanElement = cell.querySelector('span');
+
+									// Check if the span element exists
+									if (spanElement) {
+										// Apply styles to the span element
+										 const spanTextContent = spanElement.textContent.trim();
+										
+										 const spanId = 'span-id-'+spanTextContent; // Creating a unique ID for each span
+    								     spanElement.setAttribute('id', spanId);
+										
+										//spanElement.style.fontWeight = 'bold';
+										spanElement.style.fontFamily = 'Consolas';
+            							spanElement.style.fontSize = '14px';
+										spanElement.style.color = '#a11b5a';
+										// Add any other styles you want to apply
+									}
+								});
+
+							}
+    	  
+      </script>
+	</body>
+
+
+</div>
+</html>
+

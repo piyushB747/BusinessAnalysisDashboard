@@ -1,0 +1,34 @@
+@charset "ISO-8859-1";
+
+.sidebar-nav{
+	background-color: #A497C9;
+}
+.sidebar-link{
+	background-color: #A497C9;
+	
+}
+
+.sidebar-brand{
+   	background-color: #A497C9;
+}
+
+.sidebar-item{
+	background-color: #A497C9;
+}
+
+.align-middle{
+	background-color: #A497C9;
+}
+
+.sidebar-brand{
+	font-weight: bolder;
+	color: black;
+}
+
+.container-fluid p-0{
+	padding:12px;
+}
+
+.container-fluid p-0{
+	margin: -30px;
+}

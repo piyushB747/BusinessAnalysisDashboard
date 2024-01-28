@@ -1,0 +1,63 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="executiveheader">
+
+  <div class="d-flex align-items-center g-3 g-xxl-0 h-100 align-content-between" style="justify-content: space-between;">
+    <div class="card-info col-md-2 p-0 m-1">
+        
+           
+            <div class="d-flex" style="flex-direction: column;align-items: center;">
+              <h3 class="mb-0" th:text="${n_OpenCount}"></h3>
+              <span class="fw-semi-bold">Open</span>
+            </div>
+           
+                
+    </div>
+    <div class="card-info col-md-2 p-0 m-1">
+      
+            <div class="d-flex" style="flex-direction: column;align-items: center;">
+              <h2 class="mb-0" th:text="${n_PausedCount}"></h2>
+              <span class="fw-semi-bold">Paused</span>
+            </div>
+          
+    </div>
+    <div class="card-info col-md-2 p-0 m-1">
+     
+            <div class="d-flex" style="flex-direction: column;align-items: center;">
+              <h2 class="mb-0" th:text="${n_TechClosedCount}"></h2>
+              <span class="fw-semi-bold">TechClosed</span>
+            </div>
+    </div>
+    <div class="card-info col-md-2 p-0 m-1">
+     
+            <div class="d-flex" style="flex-direction: column;align-items: center;">
+              <h3 class="mb-0" th:text="${n_unassignedCount}"></h3>
+              <span class="fw-semi-bold">Unassigned</span>
+            </div>
+
+    </div>
+    <div class="card-info col-md-2 p-0 m-1">
+      
+            <div class="d-flex" style="flex-direction: column;align-items: center;">
+              <h3 class="mb-0" th:text="${n_slaViolatedCount}"></h3>
+              <span class="fw-semi-bold">SLA Violated</span>
+            </div>
+    </div>
+     <div class="card-info col-md-2 p-0 m-1">
+     
+            <div class="d-flex" style="flex-direction: column;align-items: center;">
+              <h2 class="mb-0" th:text="${n_ClosedCount}"></h2>
+              <span class="fw-semi-bold">Closed</span>
+            </div>
+    </div>
+  </div>
+  <style>
+  .card-info{
+    border: 1px solid;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+  </style>
+</div>
+</body>
+</html>

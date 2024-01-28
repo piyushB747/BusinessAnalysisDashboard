@@ -1,0 +1,102 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="executive_sidebar">
+		<div class="sidebar1">
+			<div class="upper-icon d-flex"
+				style="flex-direction: column; align-items: center;">
+				<a th:href="@{/executivehome}"> <ion-icon name="apps-outline"></ion-icon>
+					</ion-icon></a>
+				<p>Dashboard</p>
+			</div>
+			<div class="sidebar2">
+				<div class="btn-group dropend">
+					<button type="button" class="btn dropdown-toggle d-flex"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="border: none; flex-direction: column; align-items: center;">
+						<ion-icon name="stats-chart-outline"
+							style="font-size:21px;padding-top:23px"></ion-icon>
+						<p>Analysis</p>
+					</button>
+					<ul class="dropdown-menu">
+						<li class="dh"> <a th:href="@{/margin/directapproximation}" style="text-decoration: none; color: #336699; font-family: 'Arial', sans-serif; font-weight: bold;">Direct Margin</a></li>
+						<li class="dh"><a th:href="@{/margin/indirectapproximation}" style="text-decoration: none; color: #336699; font-family: 'Arial', sans-serif; font-weight: bold;">Indirect Margin </a></li>
+                        <li class="dh"><a th:href="@{/realtimemargin}" style="text-decoration: none; color: #336699; font-family: 'Arial', sans-serif; font-weight: bold;">Real Time Margin</a></li>
+						<!--<li class="dh"><a th:href="@{/realtimecalculation}" style="text-decoration: none; color: #336699; font-family: 'Arial', sans-serif; font-weight: bold;">Real Calculation</a></li>-->
+
+					</ul>
+				</div>
+				<!--
+				<div class="btn-group dropend">
+					<button type="button" class="btn dropdown-toggle"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="border: none">
+						<ion-icon name="mail-outline"
+							style="font-size:21px;padding-top:23px"></ion-icon>
+						<p>Mails</p>
+					</button>
+					<ul class="dropdown-menu">
+						
+
+					</ul>
+				</div>
+				-->
+				<!--
+				<div class="btn-group dropend">
+					<button type="button" class="btn dropdown-toggle"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="border: none">
+						<ion-icon name="map-outline" style="font-size:21px;padding-top:23px"></ion-icon>
+						<p>Maps</p>
+					</button>
+					<ul class="dropdown-menu">
+						<li class="dh">MAPS</li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li class="dd">Engineer Location</li>
+						<li class="dd">Geo Map</li>
+					</ul>
+				</div>
+				<div class="btn-group dropend">
+					<button type="button" class="btn dropdown-toggle"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="border: none;">
+						<ion-icon name="settings-outline"  style="font-size:21px;padding-top:23px"></ion-icon>
+						<p>Setting</p>
+					</button>
+					<ul class="dropdown-menu">
+						<li class="dh">Graphs</li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li class="dd">SLA Graph</li>
+						<li class="dd">Status Analysis</li>
+						<li class="dd">FeedBack Graph</li>
+						<li class="dd">FeedBack Graph</li>
+						<li class="dd">FeedBack Graph</li>
+					</ul>
+				</div>
+				-->
+				<!--<div class="btn-group dropend">
+					<button type="button" class="btn dropdown-toggle"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="border: none">
+						<ion-icon name="today-outline" style="font-size:21px;padding:23px"></ion-icon>
+					</button>
+					<ul class="dropdown-menu">
+						<li class="dh">Calenders</li>
+						<li>
+							<hr class="dropdown-divider">
+						</li>
+						<li class="dd">Engineer Attendence</li>
+						<li class="dd">Customer Start Date</li>
+						<li class="dd">SLA TimeTable</li>
+						<li class="dd">RM TimeTable</li>
+					</ul>
+				</div> -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

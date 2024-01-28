@@ -1,0 +1,236 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="olddatatable">		
+
+                         <div class="tab-pane" id="tab-eg4-2" role="tabpanel">
+                         <!-- <h4 class="p-2" style="color:black" id="tabHeaderTree">Ticket Status Reporting Manager Wise</h4> -->
+                         <h5 class="p-2" style="color:black; font-family: 'Lucida Console','Courier New', monospace; font-weight: bold;" id="tabHeaderTree">
+                         Ticket Status Reporting Manager Wise</h5>
+                         
+                               
+                                <div id="Incident-SummaryRmwise">
+                                    <div style="max-width: 100%; overflow-x: auto">                                        
+                                        <div id="treeview" class="treeview">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                           </div>
+                           
+                           
+                     
+<script th:inline="javascript">
+
+var m_strTreeType="";
+function buildTree(treeviewid, treeNodes, header) {
+    var $container = $("<ul>");
+    if (!treeNodes)
+        return;
+    $.each(treeNodes, function (i, child) {
+        if (header === true) {
+            
+            $("<div class='thspancols'>\n\
+    <span class='colspan colspan0'>Open</span>\n\
+    <span class='colspan colspan1'>Paused</span>\n\
+    <span class='colspan colspan2'>Technician Closed</span>\n\
+    <span class='colspan colspan3'>Closed</span>\n\
+    <span class='colspan colspan4'>SLA Violated</span>\n\
+</div>").appendTo(treeviewid);
+        }''
+        if (child.sub == "true") {
+      	
+            $("<li>", {html: "<div data-trigger='true' class='tree-trigger' data-some-data='" + child.id+"-"+ child.name +"-"+ child.treetype +"' id='" + child.id + "'><i></i> " + child.name +
+                        "<div class='tree-data'>\n\
+            <span class='colspan colspan1'>" + child["open"] + "</span>\n\
+            <span class='colspan colspan1'>" + child["paused"] + "</span>\n\
+            <span class='colspan colspan2'>" + child["technicianClosed"] + "</span>\n\
+            <span class='colspan colspan3'>" + child["closed"] + "</span>\n\
+            <span class='colspan colspan4'>" + child["slaViolated"] + "</span>\n\
+        </div></div>"}).appendTo($container);
+        } else {
+        	 $("<li>").html("<div data-trigger='false' class='tree-trigger' data-some-data='" + child.id+"-"+ child.name +"-"+ child.treetype +"'  id='" + child.id + "'><i></i> " + child.name +
+                     "<div class='tree-data'>" +
+                     "<span class='colspan colspan0'>" + child["open"] + "</span>" +
+                     "<span class='colspan colspan1'>" + child["paused"] + "</span>" +
+                     "<span class='colspan colspan2'>" + child["technicianClosed"] + "</span>" +
+                     "<span class='colspan colspan3'>" + child["closed"] + "</span>" +
+                     "<span class='colspan colspan4'>" + child["slaViolated"] + "</span>" +
+                     "</div></div>").appendTo($container);
+        }
+    });
+    
+    
+    /*From Here We are Passing to the Main Page*/
+    $container.on('click', '.tree-trigger', function() {
+        var den = $(this).data('some-data');  
+        $(document).trigger('customEvent', den);
+    });
+    /*From Here We are Passing to the Main Page*/
+    
+    return $container;
+}
+
+var treeviewid = "#treeview";
+
+function generateTree(id, action,treeviewid) {
+	
+    if (action == "true") {
+        treeviewid = $('#' + id).closest('li');
+    }
+	
+	if(m_strTreeType===''){
+		m_strTreeType="rmwise";
+	}
+	
+	var url_getdataforexecutivetree= /*[[@{/getdataforexecutivetree}]]*/ +"";
+    $.getJSON(url_getdataforexecutivetree+'?action='+action+'&UserId='+id+'&m_strTreeType='+m_strTreeType, function () {
+    	
+    }).done(function (data) {
+    	
+        var treeNodes = data.progress_Data;
+        if (treeNodes[0].empty == "true")
+            return;
+             
+        console.log(typeof treeviewid+" WOMEN CHECK ELEMENT OF TREE INSIDE generate Tree"+treeviewid);
+        if (action == "false") {
+           
+        	$(treeviewid).append(buildTree(treeviewid, treeNodes, true));
+            $(treeviewid + ' > ul:eq(0)').show();
+            
+        } else {
+        	
+            $(treeviewid).append(buildTree(treeviewid, treeNodes, false));
+            $(treeviewid).find('ul').show();
+        }
+
+    }).always(function () {
+        setwidth(treeviewid);
+
+    });
+}
+$(treeviewid).on("click", 'li:not(.expand) > .tree-trigger', this, function (e) {
+    if ($(this).attr('data-trigger') == "true") {
+        if (!$(this).hasClass('expand')) {
+            $(this).closest('li').addClass('expand');
+            var id = $(this).attr("id");
+            generateTree(id, "true");
+        }
+    }
+});
+
+
+
+$(document).ready(function () {
+	  console.log(typeof treeviewid+"1 CHECK ELEMENT OF TREE "+treeviewid);
+    
+	 generateTree(1, "false",treeviewid);
+	 $(document).on('rm_drilldown', function (event, rm_drilldown) {
+		
+				if(rm_drilldown==='rm_drilldown'){
+					 m_strTreeType="rmwise";
+					 var treeviewid = "#treeview";
+					  $('#treeview').empty();  
+					  var element = document.getElementById("tabHeaderTree");
+					  element.textContent = "Ticket Status Reporting Manager Wise";
+					  generateTree(1, "false",treeviewid);
+					
+				 }else if(rm_drilldown==='region_drilldown'){	
+					  m_strTreeType="regionwise";
+					  var treeviewid = "#treeview";
+					  var element = document.getElementById("tabHeaderTree");
+					  element.textContent = "Ticket Status Region Wise";
+					  $('#treeview').empty();
+					  generateTree(1, "false",treeviewid);
+					  
+				 }else if(rm_drilldown==='state_drilldown'){	
+					  m_strTreeType="statewise";
+					  var treeviewid = "#treeview";
+					  var element = document.getElementById("tabHeaderTree");
+					  element.textContent = "Ticket Status State Wise";
+					  $('#treeview').empty();
+					  generateTree(1, "false",treeviewid);
+				 }else{ 
+					
+				 }
+		
+	  });
+	
+
+    
+
+    $(".treeview").on("mouseenter", ".colspan", this, function () {
+        var thistree = $(this).closest(".treeview");
+        $(thistree).find("." + $(this).attr("class").split(" ")[1]).addClass("active");
+    });
+    $(".treeview").on("mouseleave", ".colspan", this, function () {
+        var thistree = $(this).closest(".treeview");
+        $(thistree).find("." + $(this).attr("class").split(" ")[0]).removeClass("active");
+    });
+    $(".treeview").on("click", "ul li .tree-trigger", this, function (e) {
+        if ($(this).attr('data-trigger') == "true") {
+
+            if ($(this).next("ul").is(":hidden")) {
+                $(this).next("ul").slideDown();
+                $(this).addClass("active");
+                $(this).closest("li").addClass("expand");
+            } else {
+                $(this).next("ul").slideUp();
+                $(this).removeClass("active");
+            }
+
+            if (!$(this).closest(".treeview").hasClass("setcolspan")) {
+
+                var maxWidth = -1;
+                $('.colspan', this).each(function (colspan) {
+                    var colid = $(this).closest(".treeview").find(".colspan" + colspan);
+                    $(colid).each(function () {
+
+                        maxWidth = maxWidth > $(this).width() ? maxWidth : $(this).width();
+                    });
+                    $(colid).each(function () {
+                        $(this).width(maxWidth);
+                    });
+                    maxWidth = -1;
+                });
+            }
+            $(this).closest(".treeview").addClass("setcolspan");
+        }
+    });
+
+});
+var show = 0;
+function setwidth(settreeview) {
+    if (0 >= 1) {
+        show = 1
+        $(settreeview).closest(".tab_content").show();
+    }
+    $(settreeview).each(function () {
+        var maxWidth = -1;
+        $('ul li .tree-trigger .colspan').each(function (colspan) {
+            var colid = $(settreeview).find(".colspan" + colspan);
+            $(colid).each(function () {
+                maxWidth = maxWidth > $(this).width() ? maxWidth : $(this).width();
+            });
+            $(colid).each(function () {
+                $(this).width(maxWidth);
+            });
+            maxWidth = -1;
+        });
+    });
+    if (show == 1) {
+        $(settreeview).closest(".tab_content").hide();
+        show++;
+    }
+    $('.setcolspan').closest('.tab_content').show();
+    $(settreeview).addClass("setcolspan");
+
+}
+</script>
+
+
+</div>
+
+</body>
+
+</html>

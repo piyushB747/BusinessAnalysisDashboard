@@ -1,0 +1,116 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+  <div  th:fragment="realtimecard">
+	  <div class="card">
+						<div class="row m-3">
+							
+							<div class="form-group col-md-2">
+								<label for="periodictype" class="label-input">Periodic Type:</label>
+								 <select id="periodictype" class="input-btn" onclick="handleSelect()" required>
+									<option value="YTD">YTD</option>
+									<option value="FY">PFY</option>
+									<!--<option value="custom">Custom</option>-->
+								</select>
+							</div>
+
+
+
+							<div class="form-group col-md-2" id="yeardropdownconatiner" style="display: none;">
+								<label for="date-dropdown" class="label-input">Year Till Date:</label> 
+								<select class="input-btn" id="date-dropdown"></select>
+							</div>
+							
+			 		     <div class="form-group col-md-2" id="pfydropdownconatiner" style="display: none;">
+								  <label for="date-dropdown" class="label-input">PFY:</label> 
+									<select class="input-btn" id="pfy-dropdown" >
+										      <option>Piyush</option>
+									</select>
+                          </div>
+			
+
+
+									<div class="form-group col-md-2" style="margin-top:20px;margin-left:140px">
+										  <a onclick="calculateDirectApproximateMargin()"
+												  class="input-btn" i
+												  d="calculatebtn" 
+												   style="padding-bottom:3px;padding-top:3px;border-radius:5px;padding-right:15px;padding-left:15px; background-color: black; color: white; text-align: center; text-decoration: none; border-radius: 4px; cursor: pointer;font-size:smaller;">
+										   CALCULATE
+										   </a>
+										   
+									</div>
+									
+									<div class="form-group col-md-2" style="margin-top:20px;">
+										<a id="downloadButton" onclick="downloadApproximateMargin()" 
+											   class="input-btn" style="padding-bottom:3px;padding-top:3px;border-radius:5px;padding-right:15px;padding-left:15px; 
+											   background-color: black; color: white; text-align: center; text-decoration: none; border-radius: 4px; cursor: pointer;font-size:smaller; display: none;">
+											   DOWNLOAD
+											</a>
+									</div>
+
+						</div>
+				
+				
+								
+					
+					</div>
+
+
+<script th:inline="javascript">
+	
+			/**Handling Selected Periodic Type**/
+			function handleSelect() {
+				var selectedOption = document.getElementById("periodictype").value;
+
+				if (selectedOption === "FY") {
+
+					pfydropdownconatiner.style.display = "block";
+					yeardropdownconatiner.style.display = "none"; // Show the date dropdown container
+					
+					//qartercontainer.style.display = "block";
+
+				} else if (selectedOption === "YTD") {
+
+					yeardropdownconatiner.style.display = "block";
+					
+					pfydropdownconatiner.style.display = "none";
+					//qartercontainer.style.display = "block";
+
+				} else if (selectedOption === "custom") {
+
+					yeardropdownconatiner.style.display = "none";
+					
+					pfydropdownconatiner.style.display = "none";
+					//qartercontainer.style.display = "none";
+				}
+				else if (selectedOption === "Select") {
+
+					yeardropdownconatiner.style.display = "none";
+					
+					pfydropdownconatiner.style.display = "none";
+				//	qartercontainer.style.display = "none";
+				}
+
+				let dateDropdown = document.getElementById('date-dropdown');
+
+				let currentYear = new Date().getFullYear();
+				let earliestYear = 1970;
+				while (currentYear >= earliestYear) {
+					let dateOption = document.createElement('option');
+					dateOption.text = currentYear;
+					dateOption.value = currentYear;
+					dateDropdown.add(dateOption);
+					currentYear -= 1;
+				}
+			}
+		/**Handling Selected Periodic Type**/
+
+
+	
+</script>	   
+  </div>
+
+</body>
+</html>

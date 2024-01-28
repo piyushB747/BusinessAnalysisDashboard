@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<th:block th:replace="fragments/frag_header :: header"></th:block>
+ 	<title>Direct Margin</title>
+ 	<link rel="icon"  th:href="@{/images/favicon.png}">
+ 	<!-- MARGIN APPROXIMATION CSS DONT REMOVE -->
+ 	<link th:href="@{/CustomCssJs/marginapproximation.css}" rel="stylesheet" />
+ 	<style>
+		 
+	
+	 </style> 
+</head>
+<body>
+	
+	<!-- FORM Starts -->
+	<!-- WRAPPER STARTS HERE -->
+	<div class="wrapper">
+		<!-- Main container OF Screen Start -->
+		<div class="main">
+
+			<!-- SIDEBAR START -->
+			<div th:replace="fragments/frag_sidebar :: executive_sidebar"></div>
+			<!-- SIDEBAR END -->
+			
+			<!-- Navigation bar Start Here -->
+			<div th:replace="fragments/frag_nav :: executive_navbar"></div>
+			<!-- Navigation bar Ends Here -->
+
+			<!-- MAIN CONTENT BEGAINS FROM HERE  -->
+			<main class="content">
+				<div class="Header pl-3">
+					<div class="h3">
+						<b>Direct Margin</b>
+					</div>
+				</div>
+
+				<form th:action="@{/submit}" th:object="${dtobimarginapproximation}" method="post">
+					
+					<div class="card">
+						<div class="row m-3">
+							
+							<div class="form-group col-md-2">
+								<label for="avgcostperticketid" class="label-input">Cost Per Tickets:</label>
+								  
+								 <input class="input-btn" type="text" id="avgcostperticketid" name="avgcostperticket"  th:value="${costperticket}" /> 
+                                 <span id="dataSpan"></span>
+							</div>
+
+							<div class="form-group col-md-2">
+								<label for="periodictype" class="label-input">Periodic Type:</label>
+								 <select id="periodictype" class="input-btn" onclick="handleSelect()" required>
+									<option value="Select">Select</option>
+									<option value="YTD">YTD</option>
+									<option value="FY">PFY</option>
+									<option value="custom">Custom</option>
+								</select>
+							</div>
+
+							<div class="form-group col-md-2" id="calenderDropdownContainer" style="display: none;">
+								  <label for="fromdate" class="label-input">Date Range:</label>
+								   <div style="display: flex; align-items: center;">
+								    From: <input class="input-btn" type="date" id="fromdate" name="fromdate">
+								    To: <input class="input-btn" type="date" id="todate" name="todate">
+								  </div>
+								</div>
+
+
+
+							<div class="form-group col-md-2" id="yeardropdownconatiner" style="display: none;">
+								<label for="date-dropdown" class="label-input">Year Till Date:</label> 
+								<select class="input-btn" id="date-dropdown"></select>
+							</div>
+
+
+                         <div class="form-group col-md-2" id="pfydropdownconatiner" style="display: none;">
+								  <label for="date-dropdown" class="label-input">PFY:</label> 
+									<select class="input-btn" id="pfy-dropdown" th:field="*{m_strPfy}">
+										       <option th:value="${m_strPrevious_Current}" th:text="${m_strPrevious_Current}"></option>
+										    <option th:each="pfy : ${m_strPFY}" th:text="${pfy}" th:value="${pfy}"></option>
+									</select>
+                          </div>
+			
+						   <div class="form-group col-md-2" id="qartercontainer" style="display: none;">
+								<label for="date-q1" class="label-input">Quarter:</label>
+								 <select class="input-btn" id="date-q1">
+									<option value="All">All</option>
+									<option value="Q1">Q1</option>
+									<option value="Q2">Q2</option>
+									<option value="Q3">Q3</option>
+									<option value="Q4">Q4</option>
+								</select>								
+							</div>
+
+									<div class="form-group col-md-2" style="margin-top:20px;margin-left:140px">
+										  <a onclick="calculateDirectMargin()"
+												  class="input-btn" id="calculatebtn" 
+												   style="padding-bottom:3px;padding-top:3px;border-radius:5px;
+												   padding-right:15px;padding-left:15px;
+												    background-color: black; color: white; text-align: center; 
+												    text-decoration: none; border-radius: 4px; cursor: pointer;font-size:smaller;">
+										   CALCULATE
+										   </a>
+									</div>
+									
+									<div class="form-group col-md-2" style="margin-top:20px;">
+										<a id="downloadButton" onclick="downloadApproximateMargin()" 
+											   class="input-btn" style="padding-bottom:3px;padding-top:3px;border-radius:5px;padding-right:15px;padding-left:15px; 
+											   background-color: black; color: white; text-align: center; text-decoration: none; border-radius: 4px; cursor: pointer;font-size:smaller; display: none;">
+											   DOWNLOAD
+											</a>
+									</div>
+						</div>		
+					</div>
+
+                 <div id="messageDiv"></div>
+                <!--DEVELOPMENT FOR THE SPINNER-->
+ 			     <div id="loader" class="loader" style="display: none;"></div>
+					<div id="contentTable" style="display: none;">	
+								<div class="graph-container" >
+					        		<div class="graph"  id="id_positive_Graph" style="display: none;">
+										<!-- Graph Implementation 6AUGUST 2023 STARTS -->
+										<div th:replace="fragments/directmargin/frag_positivecolum :: positivecolumngraph" id="polarradial"> </div>
+										<!-- Graph Implementation 2AUGUST 2023 ENDS-->
+									</div>
+							
+									<div class="graph" id="id_negative_Graph" style="display: none;">
+										<!-- Graph Implementation 2AUGUST 2023 STARTS -->
+										<div th:replace="fragments/directmargin/frag_negativecolumn :: negativecolumngraph" style="width:50px;"></div>
+										<!-- Graph Implementation 2AUGUST 2023 ENDS-->
+									</div>
+							     </div>
+				               <br><br>
+				            <!-- Direct Margin Table STARTS-->
+			                  <div id="approxmargintable">  <div th:replace="fragments/directmargin/frag_margintable :: margintable"></div>   </div>	
+			              <!-- Direct Margin Table ENDS-->
+			              
+					</div>
+                 <!--DEVELOPMENT FOR THE SPINNER-->
+						     
+			                
+			                  <!-- The pagination dropdown will be displayed here -->
+			                  <div id="paginationContainer"> </div>
+                              <div th:replace="fragments/directmargin/frag_JsMargin :: marginjs"></div>
+              </form>
+			</main>
+			<!-- MAIN CONTENT ENDS HERE  -->
+			
+			<!-- FOOTER START HERE -->  <div th:replace="fragments/frag_footer :: footer"></div> <!-- FOOTER ENDS HERE -->
+			
+		</div>
+		<!-- Main container OF Screen Start -->
+	</div>
+
+
+
+     <!-- Model Is Place Here -->    <div th:replace="fragments/directmargin/frag_modal :: marginmodal"></div> <!-- Model Is Place Here -->
+			
+
+</body>
+
+</html>

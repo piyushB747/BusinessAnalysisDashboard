@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+	
+	<style type="text/css">
+		.highcharts-figure,
+		.highcharts-data-table table {
+			min-width: 320px;
+			max-width: 660px;
+			margin: 1em auto;
+		}
+
+		.highcharts-data-table table {
+			font-family: Verdana, sans-serif;
+			border-collapse: collapse;
+			border: 1px solid #ebebeb;
+			margin: 10px auto;
+			text-align: center;
+			width: 100%;
+			max-width: 500px;
+		}
+
+		.highcharts-data-table caption {
+			padding: 1em 0;
+			font-size: 1.2em;
+			color: #555;
+		}
+
+		.highcharts-data-table th {
+			font-weight: 600;
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table td,
+		.highcharts-data-table th,
+		.highcharts-data-table caption {
+			padding: 0.5em;
+		}
+
+		.highcharts-data-table thead tr,
+		.highcharts-data-table tr:nth-child(even) {
+			background: #f8f8f8;
+		}
+
+		.highcharts-data-table tr:hover {
+			background: #f1f7ff;
+		}
+	</style>
+
+	
+</head>
+<div th:fragment="mixgraph">
+		<!-- HIGHCHART SCRIPT ALL START-->
+
+    <!--
+		<script th:src="@{/HC/code/highcharts.js}"></script>
+		<script th:src="@{/HC/code/modules/variable-pie.js}"></script>
+		<script th:src="@{/HC/code/modules/exporting.js}"></script>
+		<script th:src="@{/HC/code/modules/export-data.js}"></script>
+		<script th:src="@{/HC/code/modules/accessibility.js}"></script>
+		<script th:src="@{/HC/code/modules/drilldown.js}"></script>
+		<script th:src="@{/HC/code/modules/heatmap.js}"></script>
+	-->	
+		
+		<figure class="highcharts-figure" style="height: 360px;">
+										<div id="containermix"></div>
+		</figure>
+	<script type="text/javascript">
+		
+
+
+
+     
+		$(document).ready(function() {
+        var baseUrl = /*[[@{/}]]*/ ''; // Get the base URL using Thymeleaf
+        var url_getMainURL = baseUrl + "apitogetcostofoperation";
+		var url = url_getMainURL + "/getmonthwise?m_strYear=2022&m_strSeason=Season2&m_strCurrency=weekwise&m_strStatusType=SLA";
+
+
+     //  alert(url);
+
+			fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    // Call a function to populate the chart with the fetched data
+    createChart(data);
+  })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+  
+  function createChart(data) {
+	  
+  Highcharts.chart('containermix', {
+	    chart: {
+				backgroundColor: ''
+			},
+		 title: {
+		        text: 'Cost Of Operation ',
+		        align: 'left'
+		    },
+		    xAxis: {
+		        categories:data.l_strCategories
+		    },
+		    yAxis: {
+		        title: {
+		            text: 'Total Cost'
+		        }
+		    },
+		    tooltip: {
+		        valueSuffix: ' Total Cost'
+		    },
+		    plotOptions: {
+		        series: {
+		            borderRadius: '25%'
+		        }
+		    },
+      series: [{
+        type: 'column',
+        name: 'Contract Value',
+        data: data.dtoContractValueCurrentYear.l_IntContractValue
+    }, {
+        type: 'column',
+        name: 'Claim Cost',
+        data: data.dtoClaimValueCurrentYear.l_IntClaimValue
+    }, {
+        type: 'column',
+        name: 'OverallCost',
+        data: data.dtoOverAllCurrentYear.l_IntOverAllValue
+    }, {
+        type: 'spline',
+        name: 'Average',
+        data: data.dtoAvgLine.l_IntAvgLineValue,
+        marker: {
+            lineWidth: 2,
+            lineColor: Highcharts.getOptions().colors[3],
+            fillColor: 'white'
+        }
+    }, {
+        type: 'pie',
+        name: 'Total',
+        data: [{
+            name: 'Contract',
+            y: data.n_Intcontract,
+            color: Highcharts.getOptions().colors[0], // 2020 color
+            dataLabels: {
+                enabled: true,
+                distance: -50,
+                format: '{point.total} RS',
+                style: {
+                    fontSize: '15px'
+                }
+            }
+        }, {
+            name: 'Claim',
+            y: data.n_Intclaim,
+            color: Highcharts.getOptions().colors[1] // 2021 color
+        }, {
+            name: 'Overall',
+            y: data.n_IntoverAll,
+            color: Highcharts.getOptions().colors[2] // 2022 color
+        }],
+        center: [75, 65],
+        size: 100,
+        innerSize: '70%',
+        showInLegend: false,
+        dataLabels: {
+            enabled: false
+        }
+    }]
+  });
+}
+
+	
+				});
+	</script>
+	</div>
+</body>
+</html>

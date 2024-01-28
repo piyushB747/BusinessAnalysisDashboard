@@ -1,0 +1,78 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{approximate_table_css/fonts/icomoon/style.css}">
+
+    <link rel="stylesheet" th:href="@{approximate_table_css/css/owl.carousel.min.css}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{approximate_table_css/css/bootstrap.min.css}">
+    
+    <!-- Style -->
+    <link rel="stylesheet" th:href="@{approximate_table_css/css/style.css}">
+
+<style>
+.table-container {
+    max-height: 400px; /* Set a suitable maximum height */
+    overflow: auto;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    background: white;
+}
+
+  </style>
+
+  </head>
+  
+  <body>
+  
+  <div  th:fragment="realtable">
+
+    
+    
+      <div class="" style="margin-top:-15px;">
+
+										   
+	 <div class="table-container">
+	        <table class="table custom-table" style="background:white;font-family:Verdana, sans-serif;">	           
+	            <thead style="background:white;font-size: 12px" id="tableHead"></thead>
+	            <tbody id="tableBody" style="font-size: 14px;text-align: center;font-weight:bold;  font-family: 'Courier New', monospace;"></tbody>
+	            
+	        </table>
+      </div>
+
+
+ 
+
+  </div>
+  
+  <script>
+  window.addEventListener('scroll', function() {
+	    var table = document.querySelector('table');
+	    var thead = table.querySelector('thead');
+	    var rect = table.getBoundingClientRect();
+	  
+	    if (rect.top <= 0 && rect.bottom > thead.offsetHeight) {
+	        thead.classList.add('sticky-header');
+	    } else {
+	        thead.classList.remove('sticky-header');
+	    }
+	});
+  </script>
+
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
+    </div>
+  </body>
+</html>
